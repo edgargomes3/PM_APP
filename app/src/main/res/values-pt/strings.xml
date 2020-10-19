@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nextlabel">Próximo</string>
+    <string name="previouslabel">Anterior</string>
+    <string name="returnlabel">Voltar</string>
+    <string name="createlabel">Criar</string>
+    <string name="editlabel">Editar</string>
+    <string name="deletelabel">Apagar</string>
+    <string name="titlelabel">Titulo</string>
+    <string name="textlabel">Texto</string>
+</resources>

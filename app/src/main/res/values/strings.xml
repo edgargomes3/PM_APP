@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">PM_APP</string>
+    <string name="app_name" translatable="false">PM_APP</string>
+    <string name="nextlabel">Next</string>
+    <string name="previouslabel">Previous</string>
+    <string name="returnlabel">Return</string>
+    <string name="createlabel">Create</string>
+    <string name="deletelabel">Delete</string>
+    <string name="editlabel">Edit</string>
+    <string name="titlelabel">Title</string>
+    <string name="textlabel">Text</string>
 </resources>

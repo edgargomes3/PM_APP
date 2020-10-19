@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    fun notes( view: View ) {
+    fun show_notes( view: View ) {
         val intent = Intent( this, NotesActivity::class.java )
         startActivity(intent)
     }

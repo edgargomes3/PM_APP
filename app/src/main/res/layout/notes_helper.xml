@@ -5,20 +5,26 @@
 
     <TextView
         android:id="@+id/notes_recycle_title"
-        android:layout_margin="10dp"
-        android:textStyle="bold"
-        android:text="TESTE"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    </TextView>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/titlelabel"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/notes_recycle_text"
-        android:text="TESTE2"
+        android:text="@string/textlabel"
         android:layout_below="@id/notes_recycle_title"
         android:layout_alignLeft="@id/notes_recycle_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/notes_recycle_title">
     </TextView>
 
 </RelativeLayout>
