@@ -8,4 +8,6 @@
     <string name="editlabel">Edit</string>
     <string name="titlelabel">Title</string>
     <string name="textlabel">Text</string>
+    <string name="savelabel">Save</string>
+    <string name="deleteallnoteslabel">Delete All Notes</string>
 </resources>

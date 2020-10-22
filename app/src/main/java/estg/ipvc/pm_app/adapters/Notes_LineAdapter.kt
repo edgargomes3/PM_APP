@@ -8,11 +8,11 @@ import estg.ipvc.pm_app.R
 import estg.ipvc.pm_app.dataclasses.note
 import kotlinx.android.synthetic.main.notes_helper.view.*
 
-class LineAdapter (val list: ArrayList<note>): RecyclerView.Adapter<LineViewHolder>() {
+class NoteLineAdapter (val list: ArrayList<note>): RecyclerView.Adapter<LineViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LineViewHolder {
         val itemView = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.notes_helper, parent, false );
+            .inflate(R.layout.notes_helper, parent, false )
         return LineViewHolder(itemView)
     }
 

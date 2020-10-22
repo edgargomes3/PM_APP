@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/new_note_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/titlelabel"
+        android:autofillHints="@string/titlelabel"
+        android:fontFamily="sans-serif-light"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:inputType="textShortMessage"
+        />
+
+    <EditText
+        android:id="@+id/new_note_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/textlabel"
+        android:autofillHints="@string/textlabel"
+        android:fontFamily="sans-serif-light"
+        android:textSize="18sp"
+        android:layout_below="@id/new_note_title"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:inputType="textMultiLine"
+        android:lines="8"
+        android:minLines="6"
+        android:gravity="top|start"
+        android:maxLines="10"
+        android:scrollbars="vertical"
+        />
+
+    <Button
+        android:id="@+id/new_note_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/design_default_color_primary"
+        android:text="@string/savelabel"
+        android:layout_alignParentBottom="true"
+        />
+</RelativeLayout>

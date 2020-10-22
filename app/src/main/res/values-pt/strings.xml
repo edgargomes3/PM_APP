@@ -8,4 +8,6 @@
     <string name="deletelabel">Apagar</string>
     <string name="titlelabel">Titulo</string>
     <string name="textlabel">Texto</string>
+    <string name="savelabel">Guardar</string>
+    <string name="deleteallnoteslabel">Apagar Todas as Notas</string>
 </resources>
