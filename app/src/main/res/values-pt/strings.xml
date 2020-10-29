@@ -10,4 +10,5 @@
     <string name="textlabel">Texto</string>
     <string name="savelabel">Guardar</string>
     <string name="deleteallnoteslabel">Apagar Todas as Notas</string>
+    <string name="fieldnotinsertedlabel">Campo não Inserido</string>
 </resources>

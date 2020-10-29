@@ -1,47 +1,80 @@
 package estg.ipvc.pm_app.activity
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.CheckBox
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import estg.ipvc.pm_app.R
 import estg.ipvc.pm_app.adapters.*
 import estg.ipvc.pm_app.entity.*
 import estg.ipvc.pm_app.viewmodel.*
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import estg.ipvc.pm_app.R
+import kotlinx.android.synthetic.main.notes_helper.*
 
 private lateinit var noteViewModel: NoteViewModel
 class NoteActivity : AppCompatActivity() {
     private val AddNoteRequestCode = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
 
         val recyclerView = findViewById<RecyclerView>(R.id.notes_recycler_view)
         val adapter = NoteAdapter(this)
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         noteViewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
         noteViewModel.allNotes.observe(this, { notes ->
-            notes?.let{adapter.setNote(it)}
+            notes?.let { adapter.setNote(it) }
         })
+
+        val sharedPref: SharedPreferences = getSharedPreferences(
+            getString(R.string.preference_file_key), Context.MODE_PRIVATE
+        )
+
+        val soundValue = sharedPref.getBoolean(getString(R.string.sound), false)
+        Log.d("SHAREDPREF", "Read $soundValue")
+
+        /*if ( soundValue ) {
+             findViewById<CheckBox>(R.id.note_checkBox).isChecked = true
+        }*/
+    }
+
+    fun checkboxClicked(view: View) {
+        if ( view is CheckBox ) {
+            val sharedPref : SharedPreferences = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE
+            )
+            with(sharedPref.edit()) {
+                putBoolean(getString(R.string.sound), view.isChecked)
+                commit()
+            }
+            Log.d("SHAREDPREF", "Changed to ${view.isChecked}")
+
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AddNoteRequestCode && resultCode == Activity.RESULT_OK) {
             data?.getStringExtra(AddNote.EXTRA_REPLY)?.let {
-                val name = it
+                val title = it
                 data.getStringExtra(AddNote.EXTRA1_REPLY)?.let {
-                    val note = Note(name = (name), numero = (it))
+                    val note = Note(title = (title), text = (it))
 
                     noteViewModel.insertNote(note)
                 }
@@ -50,7 +83,8 @@ class NoteActivity : AppCompatActivity() {
             Toast.makeText(
                 applicationContext,
                 "Campo nao inserido",
-                Toast.LENGTH_LONG).show()
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -69,11 +103,13 @@ class NoteActivity : AppCompatActivity() {
                 true
             }
 
-            /*R.id.updateana -> {
-                noteViewModel.updatenumber("967")
+            R.id.delete_note -> {
+                val tag = findViewById<TextView>(R.id.note_checkBox).tag
+
+                Toast.makeText(this, "$tag", Toast.LENGTH_SHORT)
                 true
             }
-            R.id.updatecon ->
+            /*R.id.updatecon ->
             {
                 val intent = Intent(this@NoteActivity, UpdateActivity::class.java)
                 this.startActivity(Intent(this,UpdateActivity::class.java))

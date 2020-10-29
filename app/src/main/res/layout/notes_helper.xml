@@ -26,4 +26,13 @@
         android:text="@string/textlabel"
         android:textSize="12sp" />
 
+    <CheckBox
+        android:id="@+id/note_checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:onClick="checkboxClicked"
+        />
+
 </RelativeLayout>

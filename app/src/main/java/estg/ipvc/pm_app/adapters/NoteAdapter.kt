@@ -15,9 +15,9 @@ class NoteAdapter internal constructor(
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var notes = emptyList<Note>()
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val noteItemView: TextView = itemView.findViewById(R.id.notes_recycle_title)
-        val notesubItemView: TextView = itemView.findViewById(R.id.notes_recycle_text)
-
+        val noteItemViewTitle: TextView = itemView.findViewById(R.id.notes_recycle_title)
+        val noteItemViewText: TextView = itemView.findViewById(R.id.notes_recycle_text)
+        val noteCheckBox: TextView = itemView.findViewById(R.id.note_checkBox)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -27,8 +27,9 @@ class NoteAdapter internal constructor(
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val current = notes[position]
-        holder.noteItemView.text = current.name
-        holder.notesubItemView.text = current.numero
+        holder.noteCheckBox.tag = current.id
+        holder.noteItemViewTitle.text = current.title
+        holder.noteItemViewText.text = current.text
     }
     internal fun setNote(notes: List<Note>){
         this.notes=notes
