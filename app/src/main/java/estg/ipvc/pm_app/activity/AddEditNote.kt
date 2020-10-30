@@ -20,7 +20,7 @@ class AddEditNote : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_note)
+        setContentView(R.layout.activity_add_edit_note)
 
         editNoteTitleView = findViewById(R.id.new_note_title)
         editNoteTextView = findViewById(R.id.new_note_text)
