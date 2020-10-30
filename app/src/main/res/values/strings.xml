@@ -15,4 +15,6 @@
     <string name="sound" translatable="false">sound</string>
     <string name="fieldtextemptylabel">Parameter Text is Empty</string>
     <string name="notecreatedlabel">Note Created</string>
+    <string name="noupdatelabel">Note can\'t be Updated</string>
+    <string name="noteupdatedlabel">Note Updated</string>
 </resources>

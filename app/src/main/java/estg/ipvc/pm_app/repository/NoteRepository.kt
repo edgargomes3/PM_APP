@@ -8,19 +8,19 @@ class NoteRepository(private val noteDao: NoteDao) {
 
     val allNotes: LiveData<List<Note>> = noteDao.getNotes()
 
-    suspend fun deleteNote(id: Note){
-        noteDao.deleteNote( id )
-    }
-
-    suspend fun deleteAllNotes(){
-        noteDao.deleteAllNotes()
-    }
-
     suspend fun insertNote( note: Note ) {
         noteDao.insert( note )
     }
 
-    suspend fun updateNote(numero: String, name: String){
-        noteDao.updateNote(numero, name)
+    suspend fun updateNote( note: Note ) {
+        noteDao.updateNote(note)
+    }
+
+    suspend fun deleteNote( note: Note ) {
+        noteDao.deleteNote( note )
+    }
+
+    suspend fun deleteAllNotes() {
+        noteDao.deleteAllNotes()
     }
 }

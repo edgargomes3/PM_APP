@@ -13,4 +13,6 @@
     <string name="fieldtitleemptylabel">Parâmetro Titulo está Vazio</string>
     <string name="fieldtextemptylabel">Parâmetro Texto está Vazio</string>
     <string name="notecreatedlabel">Nota Criada</string>
+    <string name="noupdatelabel">Impossivel Atualizar a Nota</string>
+    <string name="noteupdatedlabel">Nota Atualizada</string>
 </resources>

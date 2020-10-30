@@ -13,7 +13,7 @@ import android.widget.EditText
 import android.widget.Toast
 import estg.ipvc.pm_app.R
 
-class AddNote : AppCompatActivity() {
+class AddEditNote : AppCompatActivity() {
 
     private lateinit var editNoteTitleView: EditText
     private lateinit var editNoteTextView: EditText
@@ -24,6 +24,10 @@ class AddNote : AppCompatActivity() {
 
         editNoteTitleView = findViewById(R.id.new_note_title)
         editNoteTextView = findViewById(R.id.new_note_text)
+
+        val intent = intent
+        editNoteTitleView.setText( intent.getStringExtra(EXTRA_TITLE) )
+        editNoteTextView.setText( intent.getStringExtra(EXTRA_TEXT) )
     }
 
     fun saveNote() {
@@ -39,6 +43,12 @@ class AddNote : AppCompatActivity() {
         else {
             val title = editNoteTitleView.text.toString()
             val text = editNoteTextView.text.toString()
+
+            val id = intent.getIntExtra( EXTRA_ID, -1 )
+            if( id != 1 ) {
+                replyIntent.putExtra(EXTRA_ID, id)
+            }
+            
             replyIntent.putExtra(EXTRA_TITLE, title)
             replyIntent.putExtra(EXTRA_TEXT, text)
             setResult(Activity.RESULT_OK, replyIntent)
@@ -63,6 +73,7 @@ class AddNote : AppCompatActivity() {
     }
 
     companion object {
+        const val EXTRA_ID = "estg.ipvc.pm_app.activity.EXTRA_ID"
         const val EXTRA_TITLE = "estg.ipvc.pm_app.activity.EXTRA_TITLE"
         const val EXTRA_TEXT = "estg.ipvc.pm_app.activity.EXTRA_TEXT"
     }
