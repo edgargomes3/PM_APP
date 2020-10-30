@@ -17,4 +17,5 @@
     <string name="notecreatedlabel">Note Created</string>
     <string name="noupdatelabel">Note can\'t be Updated</string>
     <string name="noteupdatedlabel">Note Updated</string>
+    <string name="notedeletelabel">Note Deleted</string>
 </resources>

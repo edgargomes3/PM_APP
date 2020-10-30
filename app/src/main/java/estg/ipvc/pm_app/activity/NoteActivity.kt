@@ -55,6 +55,7 @@ class NoteActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 noteViewModel.deleteNote( adapter.getNoteAt(viewHolder.adapterPosition) )
+                Toast.makeText(this@NoteActivity, R.string.notedeletelabel, Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -71,13 +72,13 @@ class NoteActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener {
             val note = Note(title = (title), text = (text))
 
             noteViewModel.insertNote(note)
-            Toast.makeText(this, R.string.notecreatedlabel, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@NoteActivity, R.string.notecreatedlabel, Toast.LENGTH_SHORT).show()
         }
         else if (requestCode == EditNoteRequestCode && resultCode == Activity.RESULT_OK) {
             val id = data?.getIntExtra( AddEditNote.EXTRA_ID, -1 )
 
             if( id == 1 ) {
-                Toast.makeText(this, R.string.noupdatelabel, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@NoteActivity, R.string.noupdatelabel, Toast.LENGTH_SHORT).show()
                 return
             }
 
@@ -86,7 +87,7 @@ class NoteActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener {
             val note = Note(id, title, text)
 
             noteViewModel.updateNote(note)
-            Toast.makeText(this, R.string.noteupdatedlabel, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@NoteActivity, R.string.noteupdatedlabel, Toast.LENGTH_SHORT).show()
         }
     }
 

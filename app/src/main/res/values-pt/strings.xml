@@ -15,4 +15,5 @@
     <string name="notecreatedlabel">Nota Criada</string>
     <string name="noupdatelabel">Impossivel Atualizar a Nota</string>
     <string name="noteupdatedlabel">Nota Atualizada</string>
+    <string name="notedeletelabel">Nota Apagada</string>
 </resources>
