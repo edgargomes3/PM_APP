@@ -18,6 +18,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import estg.ipvc.pm_app.R
 import estg.ipvc.pm_app.adapters.*
 import estg.ipvc.pm_app.entity.*
@@ -39,6 +41,11 @@ class NoteActivity : AppCompatActivity() {
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        findViewById<FloatingActionButton>(R.id.notes_new).setOnClickListener {
+            val intent = Intent(this, AddNote::class.java)
+            startActivityForResult(intent, AddNoteRequestCode)
+        }
 
         noteViewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
         noteViewModel.allNotes.observe(this, { notes ->
@@ -78,20 +85,12 @@ class NoteActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AddNoteRequestCode && resultCode == Activity.RESULT_OK) {
-            data?.getStringExtra(AddNote.EXTRA_REPLY)?.let {
-                val title = it
-                data.getStringExtra(AddNote.EXTRA1_REPLY)?.let {
-                    val note = Note(title = (title), text = (it))
+            val title = data?.getStringExtra(AddNote.EXTRA_TITLE).toString()
+            val text = data?.getStringExtra(AddNote.EXTRA_TEXT).toString()
+            val note = Note(title = (title), text = (text))
 
-                    noteViewModel.insertNote(note)
-                }
-            }
-        } else {
-            Toast.makeText(
-                applicationContext,
-                "Campo nao inserido",
-                Toast.LENGTH_LONG
-            ).show()
+            noteViewModel.insertNote(note)
+            Toast.makeText(this, R.string.notecreatedlabel, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -103,18 +102,6 @@ class NoteActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-
-            R.id.create_new_note -> {
-                val intent = Intent(this, AddNote::class.java)
-                startActivityForResult(intent, AddNoteRequestCode)
-                true
-            }
-            /*R.id.updatecon ->
-            {
-                val intent = Intent(this@NoteActivity, UpdateActivity::class.java)
-                this.startActivity(Intent(this,UpdateActivity::class.java))
-                return true
-            }*/
             R.id.delete_all_notes -> {
                 noteViewModel.deleteAllNotes()
                 true

@@ -10,5 +10,7 @@
     <string name="textlabel">Texto</string>
     <string name="savelabel">Guardar</string>
     <string name="deleteallnoteslabel">Apagar Todas as Notas</string>
-    <string name="fieldnotinsertedlabel">Campo não Inserido</string>
+    <string name="fieldtitleemptylabel">Parâmetro Titulo está Vazio</string>
+    <string name="fieldtextemptylabel">Parâmetro Texto está Vazio</string>
+    <string name="notecreatedlabel">Nota Criada</string>
 </resources>

@@ -10,7 +10,9 @@
     <string name="textlabel">Text</string>
     <string name="savelabel">Save</string>
     <string name="deleteallnoteslabel">Delete All Notes</string>
-    <string name="fieldnotinsertedlabel">Field not Inserted</string>
+    <string name="fieldtitleemptylabel">Parameter Title is Empty</string>
     <string name="preference_file_key" translatable="false">preference_file_key</string>
     <string name="sound" translatable="false">sound</string>
+    <string name="fieldtextemptylabel">Parameter Text is Empty</string>
+    <string name="notecreatedlabel">Note Created</string>
 </resources>

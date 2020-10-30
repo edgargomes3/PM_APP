@@ -3,24 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/create_new_note"
-        android:title="@string/createlabel"
-        app:showAsAction="ifRoom"
-        />
-
-    <item
-        android:id="@+id/edit_note"
-        android:title="@string/editlabel"
-        app:showAsAction="ifRoom"
-        />
-
-    <item
-        android:id="@+id/delete_note"
-        android:title= "@string/deletelabel"
-        app:showAsAction="ifRoom"
-        />
-
-    <item
         android:id="@+id/delete_all_notes"
         android:title="@string/deleteallnoteslabel"
         app:showAsAction="never"
