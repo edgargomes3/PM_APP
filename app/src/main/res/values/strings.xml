@@ -11,4 +11,6 @@
     <string name="savelabel">Save</string>
     <string name="deleteallnoteslabel">Delete All Notes</string>
     <string name="fieldnotinsertedlabel">Field not Inserted</string>
+    <string name="preference_file_key" translatable="false">preference_file_key</string>
+    <string name="sound" translatable="false">sound</string>
 </resources>

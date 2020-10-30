@@ -15,15 +15,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import estg.ipvc.pm_app.R
 import estg.ipvc.pm_app.adapters.*
 import estg.ipvc.pm_app.entity.*
 import estg.ipvc.pm_app.viewmodel.*
+import kotlinx.android.synthetic.main.activity_notes.*
 import kotlinx.android.synthetic.main.notes_helper.*
 
 private lateinit var noteViewModel: NoteViewModel
+
 class NoteActivity : AppCompatActivity() {
     private val AddNoteRequestCode = 1
 
@@ -42,16 +45,20 @@ class NoteActivity : AppCompatActivity() {
             notes?.let { adapter.setNote(it) }
         })
 
-        val sharedPref: SharedPreferences = getSharedPreferences(
-            getString(R.string.preference_file_key), Context.MODE_PRIVATE
-        )
+        // SWIPE TO DELETE
+        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback( 0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT ) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
 
-        val soundValue = sharedPref.getBoolean(getString(R.string.sound), false)
-        Log.d("SHAREDPREF", "Read $soundValue")
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                noteViewModel.deleteNote( adapter.getNoteAt(viewHolder.adapterPosition) )
+            }
 
-        /*if ( soundValue ) {
-             findViewById<CheckBox>(R.id.note_checkBox).isChecked = true
-        }*/
+        }
+
+        val itemTouchHelper = ItemTouchHelper( itemTouchHelperCallback )
+        itemTouchHelper.attachToRecyclerView( notes_recycler_view )
     }
 
     fun checkboxClicked(view: View) {
@@ -100,13 +107,6 @@ class NoteActivity : AppCompatActivity() {
             R.id.create_new_note -> {
                 val intent = Intent(this, AddNote::class.java)
                 startActivityForResult(intent, AddNoteRequestCode)
-                true
-            }
-
-            R.id.delete_note -> {
-                val tag = findViewById<TextView>(R.id.note_checkBox).tag
-
-                Toast.makeText(this, "$tag", Toast.LENGTH_SHORT)
                 true
             }
             /*R.id.updatecon ->

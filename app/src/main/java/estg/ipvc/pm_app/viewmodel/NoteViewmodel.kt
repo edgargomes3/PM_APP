@@ -21,14 +21,14 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
     fun insertNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {
         repository.insertNote(note)
     }
-    fun deleteAllNotes()= viewModelScope.launch(Dispatchers.IO){
-        repository.deleteAllNotes()
-    }
-    fun updatenumber(numero: String) = viewModelScope.launch{
-        repository.updatenumber(numero)
-    }
     fun updateNote(numero: String, name: String) = viewModelScope.launch{
         repository.updateNote(numero, name)
+    }
+    fun deleteNote(note: Note) = viewModelScope.launch{
+        repository.deleteNote(note)
+    }
+    fun deleteAllNotes()= viewModelScope.launch(Dispatchers.IO){
+        repository.deleteAllNotes()
     }
 }
 
