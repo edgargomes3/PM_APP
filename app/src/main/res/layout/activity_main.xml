@@ -6,15 +6,61 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
+    <EditText
+        android:id="@+id/login_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text=""
+        android:hint="username"
+        android:autofillHints=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.425"
+        tools:ignore="HardcodedText"
+        />
+
+    <EditText
+        android:id="@+id/login_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="password"
+        android:autofillHints=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <Button
-        android:id="@+id/btn1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/submit_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick=""
+        android:text="@string/loginlabel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/login_password"
+        app:layout_constraintStart_toStartOf="@id/login_password"
+        app:layout_constraintTop_toTopOf="@id/login_password"
+        app:layout_constraintVertical_bias="0.2"
+        tools:ignore="OnClick"
+        />
+
+    <Button
+        android:id="@+id/show_notes_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:onClick="show_notes"
-        android:text="NOTES"
-        android:layout_margin="25dp"
-        tools:ignore="MissingConstraints" />
+        android:text="@string/shownoteslabel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/submit_login_button"
+        app:layout_constraintStart_toStartOf="@id/submit_login_button"
+        app:layout_constraintTop_toTopOf="@id/submit_login_button"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

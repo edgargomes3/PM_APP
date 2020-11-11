@@ -16,4 +16,5 @@
     <string name="noupdatelabel">Impossivel Atualizar a Nota</string>
     <string name="noteupdatedlabel">Nota Atualizada</string>
     <string name="notedeletelabel">Nota Apagada</string>
+    <string name="shownoteslabel">Ver Notas</string>
 </resources>

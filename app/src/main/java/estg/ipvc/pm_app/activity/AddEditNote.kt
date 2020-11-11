@@ -45,7 +45,7 @@ class AddEditNote : AppCompatActivity() {
             val text = editNoteTextView.text.toString()
 
             val id = intent.getIntExtra( EXTRA_ID, -1 )
-            if( id != 1 ) {
+            if( id != -1 ) {
                 replyIntent.putExtra(EXTRA_ID, id)
             }
             

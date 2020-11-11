@@ -3,6 +3,7 @@ package estg.ipvc.pm_app.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -77,7 +78,7 @@ class NoteActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener {
         else if (requestCode == EditNoteRequestCode && resultCode == Activity.RESULT_OK) {
             val id = data?.getIntExtra( AddEditNote.EXTRA_ID, -1 )
 
-            if( id == 1 ) {
+            if( id == -1 ) {
                 Toast.makeText(this@NoteActivity, R.string.noupdatelabel, Toast.LENGTH_SHORT).show()
                 return
             }

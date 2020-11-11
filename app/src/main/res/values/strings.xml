@@ -18,4 +18,6 @@
     <string name="noupdatelabel">Note can\'t be Updated</string>
     <string name="noteupdatedlabel">Note Updated</string>
     <string name="notedeletelabel">Note Deleted</string>
+    <string name="loginlabel" translatable="false">Login</string>
+    <string name="shownoteslabel">Show Notes</string>
 </resources>
