@@ -17,4 +17,5 @@
     <string name="noteupdatedlabel">Nota Atualizada</string>
     <string name="notedeletelabel">Nota Apagada</string>
     <string name="shownoteslabel">Ver Notas</string>
+    <string name="title_activity_map">Mapa</string>
 </resources>

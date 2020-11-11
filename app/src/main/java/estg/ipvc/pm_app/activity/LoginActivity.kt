@@ -6,10 +6,15 @@ import android.os.Bundle
 import android.view.View
 import estg.ipvc.pm_app.R
 
-class MainActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_login)
+    }
+
+    fun login( view: View ) {
+        val intent = Intent( this, MapActivity::class.java )
+        startActivity(intent)
     }
 
     fun show_notes( view: View ) {
