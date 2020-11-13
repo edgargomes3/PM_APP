@@ -19,7 +19,6 @@
     <string name="notedeletelabel">Note Deleted</string>
     <string name="loginlabel" translatable="false">Login</string>
     <string name="shownoteslabel">Show Notes</string>
-    <string name="title_activity_map">Map</string>
     <string name="passwordlabel" translatable="false">password</string>
     <string name="usernamelabel" translatable="false">username</string>
     <string name="loginincorrectlabel">Login Failed</string>
@@ -29,4 +28,6 @@
     <string name="fieldpasswordemptylabel">Parameter Password is Empty</string>
     <string name="automatic_login_password" translatable="false">automatic_login_password</string>
     <string name="logoutlabel" translatable="false">Logout</string>
+    <string name="notesactivitylabel">Notes</string>
+    <string name="mapactivitylabel">Map</string>
 </resources>

@@ -32,13 +32,18 @@
 
         <activity
             android:name=".activity.MapActivity"
-            android:label="@string/title_activity_map"/>
-        <activity android:name=".activity.AddEditNote" />
-        <activity android:name=".activity.NoteActivity" />
-        <activity android:name=".activity.LoginActivity">
+            android:label="@string/mapactivitylabel"
+            />
+        <activity android:name=".activity.AddEditNote"
+            android:label="@string/notesactivitylabel"
+            />
+        <activity android:name=".activity.NoteActivity"
+            android:label="@string/notesactivitylabel"
+            />
+        <activity android:name=".activity.LoginActivity"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
