@@ -8,11 +8,10 @@
     <string name="editlabel">Edit</string>
     <string name="titlelabel">Title</string>
     <string name="textlabel">Text</string>
-    <string name="savelabel">Save</string>
     <string name="deleteallnoteslabel">Delete All Notes</string>
     <string name="fieldtitleemptylabel">Parameter Title is Empty</string>
     <string name="preference_file_key" translatable="false">preference_file_key</string>
-    <string name="sound" translatable="false">sound</string>
+    <string name="automatic_login_check" translatable="false">automatic_login_check</string>
     <string name="fieldtextemptylabel">Parameter Text is Empty</string>
     <string name="notecreatedlabel">Note Created</string>
     <string name="noupdatelabel">Note can\'t be Updated</string>
@@ -23,4 +22,11 @@
     <string name="title_activity_map">Map</string>
     <string name="passwordlabel" translatable="false">password</string>
     <string name="usernamelabel" translatable="false">username</string>
+    <string name="loginincorrectlabel">Login Failed</string>
+    <string name="logincorrectlabel">Login Successful</string>
+    <string name="automatic_login_username" translatable="false">automatic_login_username</string>
+    <string name="fieldusernameemptylabel">Parameter Username is Empty</string>
+    <string name="fieldpasswordemptylabel">Parameter Password is Empty</string>
+    <string name="automatic_login_password" translatable="false">automatic_login_password</string>
+    <string name="logoutlabel" translatable="false">Logout</string>
 </resources>

@@ -8,7 +8,6 @@
     <string name="deletelabel">Apagar</string>
     <string name="titlelabel">Titulo</string>
     <string name="textlabel">Texto</string>
-    <string name="savelabel">Guardar</string>
     <string name="deleteallnoteslabel">Apagar Todas as Notas</string>
     <string name="fieldtitleemptylabel">Parâmetro Titulo está Vazio</string>
     <string name="fieldtextemptylabel">Parâmetro Texto está Vazio</string>
@@ -18,4 +17,8 @@
     <string name="notedeletelabel">Nota Apagada</string>
     <string name="shownoteslabel">Ver Notas</string>
     <string name="title_activity_map">Mapa</string>
+    <string name="loginincorrectlabel">Falha na Autenticação</string>
+    <string name="logincorrectlabel">Autenticado com Sucesso</string>
+    <string name="fieldusernameemptylabel">Parâmetro Username está Vazio</string>
+    <string name="fieldpasswordemptylabel">Parâmetro Password está Vazio</string>
 </resources>

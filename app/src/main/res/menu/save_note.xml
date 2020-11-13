@@ -5,8 +5,8 @@
     <item
         android:id="@+id/new_note_btn"
         android:icon="@drawable/ic_baseline_save_24"
-        android:title="@string/savelabel"
         app:showAsAction="ifRoom"
+        android:title=""
         />
 
 </menu>

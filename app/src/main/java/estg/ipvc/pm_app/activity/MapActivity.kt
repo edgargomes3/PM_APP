@@ -1,7 +1,13 @@
 package estg.ipvc.pm_app.activity
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -40,5 +46,35 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         /*val sydney = LatLng(-34.0, 151.0)
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))*/
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.map_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.new_marker_btn -> {
+                true
+            }
+            R.id.logout_btn -> {
+                val sharedPref: SharedPreferences = getSharedPreferences(
+                        getString(R.string.preference_file_key), Context.MODE_PRIVATE )
+                with ( sharedPref.edit() ) {
+                    putBoolean(getString(R.string.automatic_login_check), false )
+                    putString(getString(R.string.automatic_login_username), null )
+                    putString(getString(R.string.automatic_login_password), null )
+                    commit()
+                }
+
+                val intent = Intent(this@MapActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
