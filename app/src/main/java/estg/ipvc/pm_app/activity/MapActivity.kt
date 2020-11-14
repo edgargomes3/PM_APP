@@ -5,17 +5,23 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toast
 
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import estg.ipvc.pm_app.API.*
 import estg.ipvc.pm_app.R
+import estg.ipvc.pm_app.dataclasses.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -28,6 +34,27 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        val request = ServiceBuilder.buildService(NotesMarkerEndPoints::class.java)
+        val call = request.getNotas()
+        var position: LatLng
+
+        call.enqueue(object : Callback<List<Nota>> {
+            override fun onResponse(call: Call<List<Nota>>, response: Response<List<Nota>>) {
+                if (response.isSuccessful) {
+                    val c = response.body()!!
+
+                    for( note in c ){
+                        position = LatLng( note.marker.latitude.toString().toDouble(), note.marker.longitude.toString().toDouble() )
+                        mMap.addMarker(MarkerOptions().position(position).title("${note.problema}"))
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<List<Nota>>, t: Throwable) {
+                Toast.makeText(this@MapActivity, "${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     /**

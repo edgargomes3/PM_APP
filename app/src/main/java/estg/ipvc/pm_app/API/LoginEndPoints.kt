@@ -1,4 +1,4 @@
-package estg.ipvc.pm_app.LoginAPI
+package estg.ipvc.pm_app.API
 
 import retrofit2.Call
 import retrofit2.http.*

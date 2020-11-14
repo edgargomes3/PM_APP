@@ -11,9 +11,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import estg.ipvc.pm_app.LoginAPI.LoginEndPoints
-import estg.ipvc.pm_app.LoginAPI.LoginOutputPost
-import estg.ipvc.pm_app.LoginAPI.ServiceBuilder
+import estg.ipvc.pm_app.API.LoginEndPoints
+import estg.ipvc.pm_app.API.LoginOutputPost
+import estg.ipvc.pm_app.API.ServiceBuilder
 import estg.ipvc.pm_app.R
 import retrofit2.Call
 import retrofit2.Callback

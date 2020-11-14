@@ -1,4 +1,4 @@
-package estg.ipvc.pm_app.LoginAPI
+package estg.ipvc.pm_app.API
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
