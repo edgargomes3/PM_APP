@@ -64,7 +64,7 @@ class AddEditNote : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.new_note_btn -> {
+            R.id.save_note_btn -> {
                 saveNote()
                 true
             }

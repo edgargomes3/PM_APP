@@ -26,8 +26,20 @@
     <string name="automatic_login_username" translatable="false">automatic_login_username</string>
     <string name="fieldusernameemptylabel">Parameter Username is Empty</string>
     <string name="fieldpasswordemptylabel">Parameter Password is Empty</string>
-    <string name="automatic_login_password" translatable="false">automatic_login_password</string>
     <string name="logoutlabel" translatable="false">Logout</string>
     <string name="notesactivitylabel">Notes</string>
     <string name="mapactivitylabel">Map</string>
+    <string name="coordinateslabel">Coordinates</string>
+    <string name="problemlabel">Problem</string>
+    <string name="fieldproblememptylabel">Parameter Problem is Empty</string>
+    <string name="imglabel">Image / Photo</string>
+    <string name="chooseoptionlabel">Choose an option:</string>
+    <string name="gallerylabel">Gallery</string>
+    <string name="cameralabel">Camera</string>
+    <string name="nolastlocationlabel">No Data about Last Location</string>
+    <string name="problemtypelabel">Problem Type</string>
+    <string name="fieldproblemtypeemptylabel">Parameter Problem Type is Empty</string>
+    <string name="imguplabel">Image Upload Failed</string>
+    <string name="noteinsertlabel">Note Inserted</string>
+    <string name="noteinsertfaillabel">Note Insertion Failed</string>
 </resources>

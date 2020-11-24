@@ -18,6 +18,7 @@ import estg.ipvc.pm_app.R
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.security.MessageDigest
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var usernameEditTextView: EditText
@@ -40,12 +41,12 @@ class LoginActivity : AppCompatActivity() {
 
         if( automatic_login_check ) {
             val user = sharedPref.getString(getString(R.string.automatic_login_username), null)
-            val pass = sharedPref.getString(getString(R.string.automatic_login_password), null)
 
-            usernameEditTextView.setText(user)
-            passwordEditTextView.setText(pass)
-
-            submit_login_button.performClick()
+            if( user != null )  {
+                val intent = Intent(this@LoginActivity, MapActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
     }
 
@@ -67,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
             val request = ServiceBuilder.buildService(LoginEndPoints::class.java)
             val call = request.postTest(
                     username,
-                    password
+                    password.sha256()
             )
 
             call.enqueue(object : Callback<LoginOutputPost> {
@@ -90,7 +91,6 @@ class LoginActivity : AppCompatActivity() {
                             with ( sharedPref.edit() ) {
                                 putBoolean(getString(R.string.automatic_login_check), true)
                                 putString(getString(R.string.automatic_login_username), username )
-                                putString(getString(R.string.automatic_login_password), password )
                                 commit()
                             }
 
@@ -116,4 +116,16 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent( this, NoteActivity::class.java )
         startActivity(intent)
     }
+
+    fun String.sha256(): String {
+        return hashString(this, "SHA-256")
+    }
+
+    private fun hashString(input: String, algorithm: String): String {
+        return MessageDigest
+            .getInstance(algorithm)
+            .digest(input.toByteArray())
+            .fold("", { str, it -> str + "%02x".format(it) })
+    }
+
 }

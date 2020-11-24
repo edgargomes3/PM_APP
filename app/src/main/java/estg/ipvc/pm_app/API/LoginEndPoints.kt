@@ -7,5 +7,5 @@ interface LoginEndPoints {
 
     @FormUrlEncoded
     @POST("/api/login/post")
-    fun postTest(@Field("username") username: String, @Field("password") password: String?): Call<LoginOutputPost>
+    fun postTest(@Field("username") username: String, @Field("password") password: String): Call<LoginOutputPost>
 }

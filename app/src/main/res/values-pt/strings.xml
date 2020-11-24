@@ -22,4 +22,17 @@
     <string name="fieldpasswordemptylabel">Parâmetro Password está Vazio</string>
     <string name="notesactivitylabel">Notas</string>
     <string name="mapactivitylabel">Mapa</string>
+    <string name="coordinateslabel">Coordenadas</string>
+    <string name="problemlabel">Problema</string>
+    <string name="fieldproblememptylabel">Parâmetro Problema está Vazio</string>
+    <string name="imglabel">Imagem / Foto</string>
+    <string name="chooseoptionlabel">Escolhe uma opção:</string>
+    <string name="gallerylabel">Galeria</string>
+    <string name="cameralabel">Câmara</string>
+    <string name="nolastlocationlabel">Não existe informação sobre Última Localização</string>
+    <string name="problemtypelabel">Tipo Problema</string>
+    <string name="fieldproblemtypeemptylabel">Parâmetro Tipo Problema está Vazio</string>
+    <string name="imguplabel">Upload da Imagem Falhou</string>
+    <string name="noteinsertlabel">Nota Inserida</string>
+    <string name="noteinsertfaillabel">Inserção da Nota Falhou</string>
 </resources>
