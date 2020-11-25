@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
         else {
 
             val request = ServiceBuilder.buildService(LoginEndPoints::class.java)
-            val call = request.postTest(
+            val call = request.postLoginTest(
                     username,
                     password.sha256()
             )
@@ -101,6 +101,56 @@ class LoginActivity : AppCompatActivity() {
                             this@LoginActivity,
                             R.string.loginincorrectlabel,
                             Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<LoginOutputPost>, t: Throwable) {
+                    Toast.makeText(this@LoginActivity, "${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+    }
+
+    fun register( view: View ) {
+
+        val username = usernameEditTextView.text.toString()
+        val password = passwordEditTextView.text.toString()
+
+        if ( TextUtils.isEmpty(username) ) {
+            Toast.makeText(this, R.string.fieldusernameemptylabel, Toast.LENGTH_LONG).show()
+            return
+        }
+        else if ( TextUtils.isEmpty(password) ) {
+            Toast.makeText(this, R.string.fieldpasswordemptylabel, Toast.LENGTH_LONG).show()
+            return
+        }
+        else {
+
+            val request = ServiceBuilder.buildService(LoginEndPoints::class.java)
+            val call = request.postRegisterTest(
+                    username,
+                    password.sha256()
+            )
+
+            call.enqueue(object : Callback<LoginOutputPost> {
+                override fun onResponse(
+                        call: Call<LoginOutputPost>,
+                        response: Response<LoginOutputPost>
+                ) {
+                    if (response.isSuccessful) {
+                        val c: LoginOutputPost = response.body()!!
+
+                        if (c.success) {
+                            Toast.makeText(
+                                    this@LoginActivity,
+                                    R.string.registercorrectlabel,
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                        } else Toast.makeText(
+                                this@LoginActivity,
+                                R.string.registerincorrectlabel,
+                                Toast.LENGTH_SHORT
                         ).show()
                     }
                 }

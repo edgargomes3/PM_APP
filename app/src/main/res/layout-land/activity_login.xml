@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="@+id/submit_login_button"
         app:layout_constraintStart_toStartOf="@+id/submit_login_button"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintVertical_bias="0.15"
         tools:ignore="HardcodedText"
         />
 
@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="@+id/submit_login_button"
         app:layout_constraintStart_toStartOf="@+id/submit_login_button"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.55"
+        app:layout_constraintVertical_bias="0.45"
         />
 
     <Button
@@ -48,7 +48,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.65"
+        />
+
+    <Button
+        android:id="@+id/submit_register_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="register"
+        android:text="@string/registerlabel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/submit_login_button"
+        app:layout_constraintStart_toStartOf="@+id/submit_login_button"
+        app:layout_constraintTop_toTopOf="@+id/submit_login_button"
+        app:layout_constraintVertical_bias="0.35"
         />
 
     <Button
@@ -61,7 +73,7 @@
         app:layout_constraintEnd_toEndOf="@id/submit_login_button"
         app:layout_constraintStart_toStartOf="@id/submit_login_button"
         app:layout_constraintTop_toTopOf="@id/submit_login_button"
-        app:layout_constraintVertical_bias="0.8"
+        app:layout_constraintVertical_bias="0.85"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

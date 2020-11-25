@@ -42,4 +42,7 @@
     <string name="imguplabel">Image Upload Failed</string>
     <string name="noteinsertlabel">Note Inserted</string>
     <string name="noteinsertfaillabel">Note Insertion Failed</string>
+    <string name="registerlabel">Register</string>
+    <string name="registerincorrectlabel">Register Failed</string>
+    <string name="registercorrectlabel">Register Successful</string>
 </resources>

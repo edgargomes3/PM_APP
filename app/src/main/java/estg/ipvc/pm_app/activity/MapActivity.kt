@@ -83,9 +83,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
                 Log.d("****LOCATION****", "new location received - " + loc.latitude + " -" + loc.longitude)
             }
-        }*/
+        }
 
-       // createLocationRequest()
+       createLocationRequest()*/
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -123,16 +123,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    /*override fun onPause() {
-        super.onPause()
-        fusedLocationClient.removeLocationUpdates(locationCallback)
-        Log.d("****LOCATION****", "onPause - removeLocationUpdates")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        startLocationUpdates()
-        Log.d("****LOCATION****", "onResume - startLocationUpdates")
+    /*private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+            return
+        }
+        fusedLocationClient.requestLocationUpdates( locationRequest, locationCallback, null )
     }
 
     private fun createLocationRequest() {
@@ -142,11 +138,15 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
-    private fun startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-            return
-        }
-        fusedLocationClient.requestLocationUpdates( locationRequest, locationCallback, null )
+    override fun onPause() {
+        super.onPause()
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+        Log.d("****LOCATION****", "onPause - removeLocationUpdates")
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        startLocationUpdates()
+        Log.d("****LOCATION****", "onResume - startLocationUpdates")
     }*/
 }

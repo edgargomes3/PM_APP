@@ -35,4 +35,7 @@
     <string name="imguplabel">Upload da Imagem Falhou</string>
     <string name="noteinsertlabel">Nota Inserida</string>
     <string name="noteinsertfaillabel">Inserção da Nota Falhou</string>
+    <string name="registerlabel">Registrar</string>
+    <string name="registerincorrectlabel">Falha no Registro</string>
+    <string name="registercorrectlabel">Registrado com Sucesso</string>
 </resources>
