@@ -38,4 +38,5 @@
     <string name="registerlabel">Registrar</string>
     <string name="registerincorrectlabel">Falha no Registro</string>
     <string name="registercorrectlabel">Registrado com Sucesso</string>
+    <string name="fieldfotoemptylabel">Parâmetro Foto está Vazio</string>
 </resources>

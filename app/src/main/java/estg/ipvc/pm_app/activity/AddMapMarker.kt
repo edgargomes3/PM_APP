@@ -141,7 +141,7 @@ class AddMapMarker : AppCompatActivity() {
             return
         }
         else if ( TextUtils.isEmpty(foto.tag.toString()) ) {
-            Toast.makeText(this, "FOTO EMPTY", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.fieldfotoemptylabel, Toast.LENGTH_LONG).show()
             return
         }
         else {
