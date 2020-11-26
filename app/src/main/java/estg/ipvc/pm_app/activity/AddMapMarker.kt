@@ -1,36 +1,28 @@
 package estg.ipvc.pm_app.activity
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Canvas
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.TextUtils
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import estg.ipvc.pm_app.API.NotesMarkerEndPoints
 import estg.ipvc.pm_app.API.NotesMarkerOutputPost
 import estg.ipvc.pm_app.API.ServiceBuilder
 import estg.ipvc.pm_app.R
+import estg.ipvc.pm_app.dataclasses.TipoProblema
 import kotlinx.android.synthetic.main.activity_add_map_marker.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -40,40 +32,68 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.reflect.Array as Array1
+import kotlin.collections.arrayListOf as arrayListOf1
 
 class AddMapMarker : AppCompatActivity() {
     private lateinit var coordenadas: TextView
     private lateinit var problema: EditText
-    private lateinit var tipoproblema: EditText
+    private lateinit var tipoproblema: Spinner
     private lateinit var lastLocation: Location
     private lateinit var foto: ImageView
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private val LOCATION_PERMISSION_REQUEST_CODE = 1
-    private val REQUEST_IMAGE_GALLERY = 2
-    private val REQUEST_IMAGE_CAMERA = 3
+    private lateinit var adapter: ArrayAdapter<String>
+    private val REQUEST_IMAGE_CAMERA = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_map_marker)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         coordenadas = findViewById<TextView>(R.id.new_marker_coord)
-        tipoproblema = findViewById<EditText>(R.id.new_marker_tipo_problema)
+        tipoproblema = findViewById<Spinner>(R.id.new_marker_tipo_problema)
         problema = findViewById<EditText>(R.id.new_marker_problema)
         foto = findViewById<ImageView>(R.id.new_marker_foto)
 
-        if ( ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-            return
-        }
-        else {
-            fusedLocationClient.lastLocation.addOnSuccessListener(this) { location->
-                if ( location != null ) {
-                    lastLocation = location
-                    coordenadas.text = "${lastLocation.latitude}, ${lastLocation.longitude}"
+        val intent = intent
+        var latitude = intent.getStringExtra(EXTRA_LATITUDE).toString()
+        var longitude = intent.getStringExtra(EXTRA_LONGITUDE).toString()
+        var username = intent.getStringExtra(EXTRA_USERNAME).toString()
+        coordenadas.text = "${latitude}, ${longitude}"
+        coordenadas.tag = username
+        lastLocation = Location("save location")
+        lastLocation.latitude = latitude.toDouble()
+        lastLocation.longitude = longitude.toDouble()
+
+
+        var tiposProblema = ArrayList<String>()
+        tiposProblema.add("Selecione")
+
+        val request = ServiceBuilder.buildService(NotesMarkerEndPoints::class.java)
+        val call = request.getTiposProblema()
+
+        call.enqueue(object : Callback<List<TipoProblema>> {
+            override fun onResponse(call: Call<List<TipoProblema>>, response: Response<List<TipoProblema>>) {
+                if (response.isSuccessful) {
+                    val c = response.body()!!
+
+                    for( tipo in c ) {
+                        tiposProblema.add("${tipo.tipo.toString()}")
+                    }
                 }
-                else Toast.makeText(this, R.string.nolastlocationlabel, Toast.LENGTH_LONG).show()
+            }
+
+            override fun onFailure(call: Call<List<TipoProblema>>, t: Throwable) {
+                Toast.makeText(this@AddMapMarker, "${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, tiposProblema )
+        tipoproblema.adapter = adapter
+
+        tipoproblema.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
             }
         }
 
@@ -131,8 +151,8 @@ class AddMapMarker : AppCompatActivity() {
         }
     }
 
-    fun saveNota(){
-        if ( TextUtils.isEmpty(tipoproblema.text) ) {
+    fun saveNota() {
+        if ( tipoproblema.selectedItemId <= 0 ) {
             Toast.makeText(this, R.string.fieldproblemtypeemptylabel, Toast.LENGTH_LONG).show()
             return
         }
@@ -145,14 +165,9 @@ class AddMapMarker : AppCompatActivity() {
             return
         }
         else {
-            val sharedPref: SharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-            val username = sharedPref.getString(getString(R.string.automatic_login_username), null)
-
-            // CREATE FILE FROM PATH
             val file = File("${foto.tag}")
             val fileName = String.format("%d.png", System.currentTimeMillis())
 
-            // CREATE MULTIPART BODY TO UPLOAD
             val requestFile: RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
             val fileToUpload: MultipartBody.Part = MultipartBody.Part.createFormData("image", fileName, requestFile)
 
@@ -167,36 +182,19 @@ class AddMapMarker : AppCompatActivity() {
                         val c = response.body()!!
 
                         if ( c.success ) {
-                            val call = request.postNotesMarker(
-                                    tipoproblema.text.toString(),
-                                    problema.text.toString(),
-                                    c.msg,
-                                    lastLocation.latitude.toString(),
-                                    lastLocation.longitude.toString(),
-                                    username.toString()
-                            )
+                            Toast.makeText(this@AddMapMarker, R.string.imageuploadlabel, Toast.LENGTH_SHORT).show()
+                            val replyIntent = Intent()
 
-                            call.enqueue(object : Callback<NotesMarkerOutputPost> {
-                                override fun onResponse(call: Call<NotesMarkerOutputPost>, response: Response<NotesMarkerOutputPost>) {
-                                    if (response.isSuccessful) {
-                                        val c = response.body()!!
-
-                                        if ( c.success ) {
-                                            Toast.makeText(this@AddMapMarker, R.string.noteinsertlabel, Toast.LENGTH_SHORT).show()
-                                            val intent = Intent(this@AddMapMarker, MapActivity::class.java)
-                                            startActivity(intent)
-                                            finish()
-                                        }
-                                        else Toast.makeText(this@AddMapMarker, R.string.noteinsertfaillabel, Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-
-                                override fun onFailure(call: Call<NotesMarkerOutputPost>, t: Throwable) {
-                                    Toast.makeText(this@AddMapMarker, "${t.message}", Toast.LENGTH_SHORT).show()
-                                }
-                            })
+                            replyIntent.putExtra(EXTRA_TIPO_PROBLEMA, tipoproblema.selectedItem.toString())
+                            replyIntent.putExtra(EXTRA_PROBLEMA, problema.text.toString())
+                            replyIntent.putExtra(EXTRA_FOTO, c.msg)
+                            replyIntent.putExtra(EXTRA_LATITUDE, lastLocation.latitude.toString())
+                            replyIntent.putExtra(EXTRA_LONGITUDE, lastLocation.longitude.toString())
+                            replyIntent.putExtra(EXTRA_USERNAME, coordenadas.tag.toString())
+                            setResult(Activity.RESULT_OK, replyIntent)
+                            finish()
                         }
-                        else Toast.makeText(this@AddMapMarker, "${R.string.imguplabel}", Toast.LENGTH_SHORT).show()
+                        else Toast.makeText(this@AddMapMarker, R.string.imageuploadfailedlabel, Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -205,5 +203,14 @@ class AddMapMarker : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    companion object {
+        const val EXTRA_TIPO_PROBLEMA = "estg.ipvc.pm_app.activity.addmapmarker.EXTRA_TIPO_PROBLEMA"
+        const val EXTRA_PROBLEMA = "estg.ipvc.pm_app.activity.addmapmarker.EXTRA_PROBLEMA"
+        const val EXTRA_FOTO = "estg.ipvc.pm_app.activity.addmapmarker.EXTRA_FOTO"
+        const val EXTRA_LATITUDE = "estg.ipvc.pm_app.activity.addmapmarker.EXTRA_LATITUDE"
+        const val EXTRA_LONGITUDE = "estg.ipvc.pm_app.activity.addmapmarker.EXTRA_LONGITUDE"
+        const val EXTRA_USERNAME = "estg.ipvc.pm_app.activity.addmapmarker.EXTRA_USERNAME"
     }
 }

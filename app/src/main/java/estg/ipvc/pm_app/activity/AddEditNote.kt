@@ -73,8 +73,8 @@ class AddEditNote : AppCompatActivity() {
     }
 
     companion object {
-        const val EXTRA_ID = "estg.ipvc.pm_app.activity.EXTRA_ID"
-        const val EXTRA_TITLE = "estg.ipvc.pm_app.activity.EXTRA_TITLE"
-        const val EXTRA_TEXT = "estg.ipvc.pm_app.activity.EXTRA_TEXT"
+        const val EXTRA_ID = "estg.ipvc.pm_app.activity.addeditnote.EXTRA_ID"
+        const val EXTRA_TITLE = "estg.ipvc.pm_app.activity.addeditnote.EXTRA_TITLE"
+        const val EXTRA_TEXT = "estg.ipvc.pm_app.activity.addeditnote.EXTRA_TEXT"
     }
 }

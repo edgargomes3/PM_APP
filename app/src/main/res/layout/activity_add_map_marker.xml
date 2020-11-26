@@ -12,28 +12,23 @@
         android:layout_height="wrap_content"
         android:text="@string/coordinateslabel"
         android:ems="10"
-        app:layout_constraintStart_toStartOf="@+id/new_marker_tipo_problema"
-        app:layout_constraintEnd_toEndOf="@+id/new_marker_tipo_problema"
+        app:layout_constraintStart_toStartOf="@+id/new_marker_problema"
+        app:layout_constraintEnd_toEndOf="@+id/new_marker_problema"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/new_marker_problema"
         android:gravity="center_horizontal"
         />
 
-    <EditText
+    <Spinner
         android:id="@+id/new_marker_tipo_problema"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:text=""
-        android:hint="@string/problemtypelabel"
-        android:autofillHints=""
-        app:layout_constraintStart_toStartOf="@+id/new_marker_problema"
         app:layout_constraintEnd_toEndOf="@+id/new_marker_problema"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/new_marker_foto"
-        app:layout_constraintVertical_bias="0.4"
-        tools:ignore="HardcodedText"
+        app:layout_constraintStart_toStartOf="@+id/new_marker_problema"
+        app:layout_constraintTop_toTopOf="@+id/new_marker_coord"
+        app:layout_constraintBottom_toBottomOf="@+id/new_marker_problema"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
         />
 
     <EditText
@@ -48,7 +43,7 @@
         app:layout_constraintStart_toStartOf="@+id/new_marker_foto"
         app:layout_constraintEnd_toEndOf="@+id/new_marker_foto"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/new_marker_foto"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.5"
         tools:ignore="HardcodedText"
         />
@@ -60,9 +55,8 @@
         app:srcCompat="@mipmap/ic_launcher"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/new_marker_problema"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.9"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

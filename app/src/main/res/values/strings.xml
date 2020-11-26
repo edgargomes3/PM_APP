@@ -39,11 +39,12 @@
     <string name="nolastlocationlabel">No Data about Last Location</string>
     <string name="problemtypelabel">Problem Type</string>
     <string name="fieldproblemtypeemptylabel">Parameter Problem Type is Empty</string>
-    <string name="imguplabel">Image Upload Failed</string>
+    <string name="imageuploadfailedlabel">Image Upload Failed</string>
     <string name="noteinsertlabel">Note Inserted</string>
     <string name="noteinsertfaillabel">Note Insertion Failed</string>
     <string name="registerlabel">Register</string>
     <string name="registerincorrectlabel">Register Failed</string>
     <string name="registercorrectlabel">Register Successful</string>
     <string name="fieldfotoemptylabel">Parameter Photo is Empty</string>
+    <string name="imageuploadlabel">Image Uploaded</string>
 </resources>

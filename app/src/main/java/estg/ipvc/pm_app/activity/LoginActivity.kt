@@ -40,13 +40,9 @@ class LoginActivity : AppCompatActivity() {
         Log.d("SP_AutoLoginCheck", "$automatic_login_check")
 
         if( automatic_login_check ) {
-            val user = sharedPref.getString(getString(R.string.automatic_login_username), null)
-
-            if( user != null )  {
                 val intent = Intent(this@LoginActivity, MapActivity::class.java)
                 startActivity(intent)
                 finish()
-            }
         }
     }
 

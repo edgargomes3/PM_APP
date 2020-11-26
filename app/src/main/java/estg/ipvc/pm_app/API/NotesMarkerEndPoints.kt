@@ -1,6 +1,7 @@
 package estg.ipvc.pm_app.API
 
 import estg.ipvc.pm_app.dataclasses.Nota
+import estg.ipvc.pm_app.dataclasses.TipoProblema
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -10,6 +11,9 @@ import retrofit2.http.*
 interface NotesMarkerEndPoints {
     @GET("/api/notas")
     fun getNotesMarker(): Call<List<Nota>>
+
+    @GET("/api/tipos")
+    fun getTiposProblema(): Call<List<TipoProblema>>
 
     /*@GET("/api/notas/{id}")
     fun getNotasById(@Path("id") id: Int): Call<Nota>

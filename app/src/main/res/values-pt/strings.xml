@@ -32,11 +32,12 @@
     <string name="nolastlocationlabel">Não existe informação sobre Última Localização</string>
     <string name="problemtypelabel">Tipo Problema</string>
     <string name="fieldproblemtypeemptylabel">Parâmetro Tipo Problema está Vazio</string>
-    <string name="imguplabel">Upload da Imagem Falhou</string>
+    <string name="imageuploadfailedlabel">Upload da Imagem Falhou</string>
     <string name="noteinsertlabel">Nota Inserida</string>
     <string name="noteinsertfaillabel">Inserção da Nota Falhou</string>
     <string name="registerlabel">Registrar</string>
     <string name="registerincorrectlabel">Falha no Registro</string>
     <string name="registercorrectlabel">Registrado com Sucesso</string>
     <string name="fieldfotoemptylabel">Parâmetro Foto está Vazio</string>
+    <string name="imageuploadlabel">Upload da Imagem com Sucesso</string>
 </resources>
