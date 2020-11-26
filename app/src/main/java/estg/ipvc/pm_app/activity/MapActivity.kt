@@ -1,5 +1,6 @@
 package estg.ipvc.pm_app.activity
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,7 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -57,8 +59,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
         val sharedPref: SharedPreferences = getSharedPreferences( getString(R.string.preference_file_key), Context.MODE_PRIVATE )
         user = sharedPref.getString(getString(R.string.automatic_login_username), null)!!
 
@@ -86,17 +86,19 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
 
-        /*locationCallback = object : LocationCallback() {
-            override fun onLocationResult(p0: LocationResult) {
-                super.onLocationResult(p0)
-                lastLocation = p0.lastLocation
-                var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
-                Log.d("****LOCATION****", "new location received - " + loc.latitude + " -" + loc.longitude)
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                for (location in locationResult.locations){
+                    lastLocation = location
+                    var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
+                    Log.d("****LOCATION****", "new location received - " + loc.latitude + " -" + loc.longitude)
+                }
             }
         }
 
-       createLocationRequest()*/
+        getLocationUpdates()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -178,45 +180,64 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             return
         }
         else {
-            fusedLocationClient.lastLocation.addOnSuccessListener(this) { location->
-                if ( location != null ) {
-                    val intent = Intent( this@MapActivity, AddMapMarker::class.java)
+            val intent = Intent( this@MapActivity, AddMapMarker::class.java)
 
 
-                    intent.putExtra(AddMapMarker.EXTRA_LATITUDE, location.latitude.toString())
-                    intent.putExtra(AddMapMarker.EXTRA_LONGITUDE, location.longitude.toString())
-                    intent.putExtra(AddMapMarker.EXTRA_USERNAME, user)
-                    startActivityForResult(intent, ADD_MAP_MARKER_REQUEST_CODE)
+            intent.putExtra(AddMapMarker.EXTRA_LATITUDE, lastLocation.latitude.toString())
+            intent.putExtra(AddMapMarker.EXTRA_LONGITUDE, lastLocation.longitude.toString())
+            intent.putExtra(AddMapMarker.EXTRA_USERNAME, user)
+            startActivityForResult(intent, ADD_MAP_MARKER_REQUEST_CODE)
+        }
+    }
+
+    private fun getLocationUpdates()
+    {
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        locationRequest = LocationRequest()
+        locationRequest.interval = 5000
+        locationRequest.fastestInterval = 5000
+        locationRequest.smallestDisplacement = 170f // 170 m = 0.1 mile
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY //set according to your app function
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+
+                if (locationResult.locations.isNotEmpty()) {
+                    lastLocation = locationResult.lastLocation
+                    var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
+                    Log.d("****LOCATION****", "New Location Received - " + loc.latitude + " -" + loc.longitude)
                 }
-                else Toast.makeText(this, R.string.nolastlocationlabel, Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    /*private fun startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
             return
         }
-        fusedLocationClient.requestLocationUpdates( locationRequest, locationCallback, null )
+        fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                null /* Looper */
+        )
     }
 
-    private fun createLocationRequest() {
-        val locationRequest = LocationRequest()
-        // interval specifies the rate at which your app will like to receive updates.
-        locationRequest.interval = 10000
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    private fun stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
     override fun onPause() {
         super.onPause()
-        fusedLocationClient.removeLocationUpdates(locationCallback)
+        stopLocationUpdates()
         Log.d("****LOCATION****", "onPause - removeLocationUpdates")
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
         startLocationUpdates()
         Log.d("****LOCATION****", "onResume - startLocationUpdates")
-    }*/
+    }
 }

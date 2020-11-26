@@ -40,4 +40,5 @@
     <string name="registercorrectlabel">Registrado com Sucesso</string>
     <string name="fieldfotoemptylabel">Parâmetro Foto está Vazio</string>
     <string name="imageuploadlabel">Upload da Imagem com Sucesso</string>
+    <string name="selecttypelabel">Selecione o Tipo</string>
 </resources>

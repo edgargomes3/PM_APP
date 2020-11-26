@@ -65,7 +65,7 @@ class AddMapMarker : AppCompatActivity() {
 
 
         var tiposProblema = ArrayList<String>()
-        tiposProblema.add("Selecione")
+        tiposProblema.add( "" )
 
         val request = ServiceBuilder.buildService(NotesMarkerEndPoints::class.java)
         val call = request.getTiposProblema()
@@ -90,7 +90,7 @@ class AddMapMarker : AppCompatActivity() {
         tipoproblema.adapter = adapter
 
         tipoproblema.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
