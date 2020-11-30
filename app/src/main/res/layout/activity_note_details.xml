@@ -7,55 +7,51 @@
     tools:context=".activity.AddEditMapMarker">
 
     <TextView
-        android:id="@+id/new_marker_coord"
+        android:id="@+id/marker_coord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/coordinateslabel"
         android:ems="10"
-        app:layout_constraintStart_toStartOf="@+id/new_marker_problema"
-        app:layout_constraintEnd_toEndOf="@+id/new_marker_problema"
+        app:layout_constraintStart_toStartOf="@+id/marker_problema"
+        app:layout_constraintEnd_toEndOf="@+id/marker_problema"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/new_marker_problema"
+        app:layout_constraintBottom_toBottomOf="@+id/marker_problema"
         android:gravity="center_horizontal"
         />
 
-    <Spinner
-        android:id="@+id/new_marker_tipo_problema"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/new_marker_problema"
-        app:layout_constraintStart_toStartOf="@+id/new_marker_problema"
-        app:layout_constraintTop_toTopOf="@+id/new_marker_coord"
-        app:layout_constraintBottom_toBottomOf="@+id/new_marker_problema"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"
-        />
-
-    <EditText
-        android:id="@+id/new_marker_problema"
+    <TextView
+        android:id="@+id/marker_tipo_problema"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="text"
-        android:text=""
-        android:hint="@string/problemlabel"
-        android:autofillHints=""
-        app:layout_constraintStart_toStartOf="@+id/new_marker_foto"
-        app:layout_constraintEnd_toEndOf="@+id/new_marker_foto"
+        app:layout_constraintEnd_toEndOf="@+id/marker_problema"
+        app:layout_constraintStart_toStartOf="@+id/marker_problema"
+        app:layout_constraintTop_toTopOf="@+id/marker_coord"
+        app:layout_constraintBottom_toBottomOf="@+id/marker_problema"
+        android:gravity="center_horizontal"
+        />
+
+    <TextView
+        android:id="@+id/marker_problema"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        app:layout_constraintStart_toStartOf="@+id/marker_foto"
+        app:layout_constraintEnd_toEndOf="@+id/marker_foto"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.5"
+        android:gravity="center_horizontal"
         tools:ignore="HardcodedText"
         />
 
     <ImageView
-        android:id="@+id/new_marker_foto"
+        android:id="@+id/marker_foto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@mipmap/ic_launcher"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/new_marker_problema"
+        app:layout_constraintTop_toTopOf="@+id/marker_problema"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 

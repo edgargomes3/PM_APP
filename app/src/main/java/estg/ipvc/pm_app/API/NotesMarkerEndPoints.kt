@@ -1,6 +1,6 @@
 package estg.ipvc.pm_app.API
 
-import estg.ipvc.pm_app.dataclasses.Nota
+import estg.ipvc.pm_app.dataclasses.MapMarker
 import estg.ipvc.pm_app.dataclasses.TipoProblema
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -9,23 +9,27 @@ import retrofit2.http.*
 
 
 interface NotesMarkerEndPoints {
-    @GET("/api/notas")
-    fun getNotesMarker(): Call<List<Nota>>
+    @GET("/api/markers")
+    fun getNotesMarker(): Call<List<MapMarker>>
 
     @GET("/api/tipos")
     fun getTiposProblema(): Call<List<TipoProblema>>
 
-    /*@GET("/api/notas/{id}")
-    fun getNotasById(@Path("id") id: Int): Call<Nota>
+    @GET("/api/marker/{id}")
+    fun getNotesMarkerById(@Path("id") id: Int): Call<List<MapMarker>>
 
-    @GET("/api/notas/user/{id}")
-    fun getNotasByUserId(@Path("id") id: Int): Call<Nota>*/
+    @FormUrlEncoded
+    @POST("/api/marker/update")
+    fun putNoteMarkerById(@Field("id") id: Int, @Field("tipo_problema") tipo_problema: String, @Field("problema") problema: String, @Field("foto") foto: String, @Field("latitude") latitude: String, @Field("longitude") longitude: String): Call<NotesMarkerOutputPost>
+
+    @GET("/api/marker/delete/{id}")
+    fun deleteNoteMarker(@Path("id") id: Int): Call<NotesMarkerOutputPost>
 
     @Multipart
-    @POST("/api/nota/post_image")
+    @POST("/api/marker/post_image")
     fun postNotesMarkerImage(@Part imagem: MultipartBody.Part): Call<NotesMarkerOutputPost>
 
     @FormUrlEncoded
-    @POST("/api/nota/post")
+    @POST("/api/marker/post")
     fun postNotesMarker(@Field("tipo_problema") tipo_problema: String, @Field("problema") problema: String, @Field("foto") foto: String, @Field("latitude") latitude: String, @Field("longitude") longitude: String, @Field("username") username: String): Call<NotesMarkerOutputPost>
 }

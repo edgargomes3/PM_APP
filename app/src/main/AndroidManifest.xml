@@ -19,22 +19,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PM_APP">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".activity.AddMapMarker"
-            android:label="@string/mapactivitylabel" />
+            android:name=".activity.MapMarkerDetails"
+            android:label="@string/mapactivitylabel"
+            />
+        <activity
+            android:name=".activity.AddEditMapMarker"
+            android:label="@string/mapactivitylabel"
+            />
         <activity
             android:name=".activity.MapActivity"
-            android:label="@string/mapactivitylabel" />
+            android:label="@string/mapactivitylabel"
+            />
         <activity
             android:name=".activity.AddEditNote"
-            android:label="@string/notesactivitylabel" />
+            android:label="@string/notesactivitylabel"
+            />
         <activity
             android:name=".activity.NoteActivity"
-            android:label="@string/notesactivitylabel" />
+            android:label="@string/notesactivitylabel"
+            />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Color
+import android.graphics.BitmapFactory
 import android.location.Location
 import android.os.Bundle
 import android.os.Environment
@@ -24,6 +24,8 @@ import estg.ipvc.pm_app.API.ServiceBuilder
 import estg.ipvc.pm_app.R
 import estg.ipvc.pm_app.dataclasses.TipoProblema
 import kotlinx.android.synthetic.main.activity_add_map_marker.*
+import kotlinx.coroutines.internal.synchronized
+import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -32,10 +34,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.reflect.Array as Array1
-import kotlin.collections.arrayListOf as arrayListOf1
+import java.net.URL
 
-class AddMapMarker : AppCompatActivity() {
+class AddEditMapMarker : AppCompatActivity() {
     private lateinit var coordenadas: TextView
     private lateinit var problema: EditText
     private lateinit var tipoproblema: Spinner
@@ -54,15 +55,32 @@ class AddMapMarker : AppCompatActivity() {
         foto = findViewById<ImageView>(R.id.new_marker_foto)
 
         val intent = intent
-        var latitude = intent.getStringExtra(EXTRA_LATITUDE).toString()
-        var longitude = intent.getStringExtra(EXTRA_LONGITUDE).toString()
+        val id = intent.getIntExtra(EXTRA_ID, -1)
+        val latitude = intent.getStringExtra(EXTRA_LATITUDE).toString()
+        val longitude = intent.getStringExtra(EXTRA_LONGITUDE).toString()
         var username = intent.getStringExtra(EXTRA_USERNAME).toString()
+
+        if( id != -1 ) {
+            coordenadas.tag = id
+            tipoproblema.tag = intent.getStringExtra(EXTRA_TIPO_PROBLEMA).toString()
+            problema.setText(intent.getStringExtra(EXTRA_PROBLEMA).toString())
+            foto.tag = intent.getStringExtra(EXTRA_FOTO).toString()
+
+            Thread {
+                val url = URL("${foto.tag}")
+                val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+
+                runOnUiThread {
+                    foto.setImageBitmap(bmp)
+                }
+            }.start()
+        }
+        else coordenadas.tag = username
+
         coordenadas.text = "${latitude}, ${longitude}"
-        coordenadas.tag = username
         lastLocation = Location("save location")
         lastLocation.latitude = latitude.toDouble()
         lastLocation.longitude = longitude.toDouble()
-
 
         var tiposProblema = ArrayList<String>()
         tiposProblema.add( "" )
@@ -74,20 +92,28 @@ class AddMapMarker : AppCompatActivity() {
             override fun onResponse(call: Call<List<TipoProblema>>, response: Response<List<TipoProblema>>) {
                 if (response.isSuccessful) {
                     val c = response.body()!!
+                    var tipoProblemaIndex = -1
 
                     for( tipo in c ) {
-                        tiposProblema.add("${tipo.tipo.toString()}")
+                        tiposProblema.add("${tipo.tipo}")
+                        if( tipoproblema.tag != null ) {
+                            if (TextUtils.equals(tipo.tipo.toString(), tipoproblema.tag.toString())) {
+                                tipoProblemaIndex = tiposProblema.lastIndex
+                            }
+                        }
                     }
+
+                    adapter = ArrayAdapter(this@AddEditMapMarker, android.R.layout.simple_spinner_item, tiposProblema )
+                    tipoproblema.adapter = adapter
+
+                    if( tipoProblemaIndex > -1 ) tipoproblema.setSelection(tipoProblemaIndex)
                 }
             }
 
             override fun onFailure(call: Call<List<TipoProblema>>, t: Throwable) {
-                Toast.makeText(this@AddMapMarker, "${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AddEditMapMarker, "${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
-
-        adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, tiposProblema )
-        tipoproblema.adapter = adapter
 
         tipoproblema.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
@@ -144,68 +170,95 @@ class AddMapMarker : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.save_note_btn -> {
-                saveNota()
+                saveMarker()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    fun saveNota() {
+    fun saveMarker() {
         if ( tipoproblema.selectedItemId <= 0 ) {
-            Toast.makeText(this, R.string.fieldproblemtypeemptylabel, Toast.LENGTH_LONG).show()
+            Toast.makeText(this@AddEditMapMarker, R.string.fieldproblemtypeemptylabel, Toast.LENGTH_LONG).show()
             return
         }
         else if ( TextUtils.isEmpty(problema.text) ) {
-            Toast.makeText(this, R.string.fieldproblememptylabel, Toast.LENGTH_LONG).show()
+            Toast.makeText(this@AddEditMapMarker, R.string.fieldproblememptylabel, Toast.LENGTH_LONG).show()
             return
         }
-        else if ( TextUtils.isEmpty(foto.tag.toString()) ) {
-            Toast.makeText(this, R.string.fieldfotoemptylabel, Toast.LENGTH_LONG).show()
+        else if ( foto.tag == null ) {
+            Toast.makeText(this@AddEditMapMarker, R.string.fieldfotoemptylabel, Toast.LENGTH_LONG).show()
             return
         }
         else {
-            val file = File("${foto.tag}")
-            val fileName = String.format("%d.png", System.currentTimeMillis())
+            val regex = "(https://dolabriform-reactio.000webhostapp.com/).+".toRegex()
+            val result = regex.matchEntire(foto.tag.toString())?.value
 
-            val requestFile: RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
-            val fileToUpload: MultipartBody.Part = MultipartBody.Part.createFormData("image", fileName, requestFile)
+            if( result == null ) {
+                val file = File("${foto.tag}")
+                val fileName = String.format("%d.png", System.currentTimeMillis())
 
-            val request = ServiceBuilder.buildService(NotesMarkerEndPoints::class.java)
-            val call = request.postNotesMarkerImage(
+                val requestFile: RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                val fileToUpload: MultipartBody.Part = MultipartBody.Part.createFormData("image", fileName, requestFile)
+
+                val request = ServiceBuilder.buildService(NotesMarkerEndPoints::class.java)
+                val call = request.postNotesMarkerImage(
                     fileToUpload
-            )
+                )
 
-            call.enqueue(object : Callback<NotesMarkerOutputPost> {
-                override fun onResponse(call: Call<NotesMarkerOutputPost>, response: Response<NotesMarkerOutputPost>) {
-                    if (response.isSuccessful) {
-                        val c = response.body()!!
+                call.enqueue(object : Callback<NotesMarkerOutputPost> {
+                    override fun onResponse(call: Call<NotesMarkerOutputPost>, response: Response<NotesMarkerOutputPost>) {
+                        if (response.isSuccessful) {
+                            val c = response.body()!!
 
-                        if ( c.success ) {
-                            Toast.makeText(this@AddMapMarker, R.string.imageuploadlabel, Toast.LENGTH_SHORT).show()
-                            val replyIntent = Intent()
+                            if (c.success) {
+                                Toast.makeText(this@AddEditMapMarker, R.string.imageuploadlabel, Toast.LENGTH_SHORT).show()
+                                foto.tag = c.msg
+                                if( coordenadas.tag != null) {
+                                    val replyIntent = Intent()
 
-                            replyIntent.putExtra(EXTRA_TIPO_PROBLEMA, tipoproblema.selectedItem.toString())
-                            replyIntent.putExtra(EXTRA_PROBLEMA, problema.text.toString())
-                            replyIntent.putExtra(EXTRA_FOTO, c.msg)
-                            replyIntent.putExtra(EXTRA_LATITUDE, lastLocation.latitude.toString())
-                            replyIntent.putExtra(EXTRA_LONGITUDE, lastLocation.longitude.toString())
-                            replyIntent.putExtra(EXTRA_USERNAME, coordenadas.tag.toString())
-                            setResult(Activity.RESULT_OK, replyIntent)
-                            finish()
+                                    replyIntent.putExtra(EXTRA_TIPO_PROBLEMA, tipoproblema.selectedItem.toString())
+                                    replyIntent.putExtra(EXTRA_PROBLEMA, problema.text.toString())
+                                    replyIntent.putExtra(EXTRA_FOTO, foto.tag.toString())
+                                    replyIntent.putExtra(EXTRA_LATITUDE, lastLocation.latitude.toString())
+                                    replyIntent.putExtra(EXTRA_LONGITUDE, lastLocation.longitude.toString())
+
+                                    if( coordenadas.tag.toString().toIntOrNull() != null ) replyIntent.putExtra(EXTRA_ID, coordenadas.tag.toString().toInt())
+                                    else replyIntent.putExtra(EXTRA_USERNAME, coordenadas.tag.toString())
+                                    setResult(Activity.RESULT_OK, replyIntent)
+                                    finish()
+                                }
+                            }
+                            else Toast.makeText(this@AddEditMapMarker, R.string.imageuploadfailedlabel, Toast.LENGTH_SHORT).show()
                         }
-                        else Toast.makeText(this@AddMapMarker, R.string.imageuploadfailedlabel, Toast.LENGTH_SHORT).show()
                     }
-                }
 
-                override fun onFailure(call: Call<NotesMarkerOutputPost>, t: Throwable) {
-                    Toast.makeText(this@AddMapMarker, "${t.message}", Toast.LENGTH_SHORT).show()
+                    override fun onFailure(call: Call<NotesMarkerOutputPost>, t: Throwable) {
+                        Toast.makeText(this@AddEditMapMarker, "${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
+            else {
+                if( coordenadas.tag != null) {
+                    val replyIntent = Intent()
+
+                    replyIntent.putExtra(EXTRA_TIPO_PROBLEMA, tipoproblema.selectedItem.toString())
+                    replyIntent.putExtra(EXTRA_PROBLEMA, problema.text.toString())
+                    replyIntent.putExtra(EXTRA_FOTO, foto.tag.toString())
+                    replyIntent.putExtra(EXTRA_LATITUDE, lastLocation.latitude.toString())
+                    replyIntent.putExtra(EXTRA_LONGITUDE, lastLocation.longitude.toString())
+
+                    if( coordenadas.tag.toString().toIntOrNull() != null ) replyIntent.putExtra(EXTRA_ID, coordenadas.tag.toString().toInt())
+                    else replyIntent.putExtra(EXTRA_USERNAME, coordenadas.tag.toString())
+                    setResult(Activity.RESULT_OK, replyIntent)
+                    finish()
                 }
-            })
+            }
         }
     }
 
     companion object {
+        const val EXTRA_ID = "estg.ipvc.pm_app.activity.addmapmarker.EXTRA_ID"
         const val EXTRA_TIPO_PROBLEMA = "estg.ipvc.pm_app.activity.addmapmarker.EXTRA_TIPO_PROBLEMA"
         const val EXTRA_PROBLEMA = "estg.ipvc.pm_app.activity.addmapmarker.EXTRA_PROBLEMA"
         const val EXTRA_FOTO = "estg.ipvc.pm_app.activity.addmapmarker.EXTRA_FOTO"
