@@ -45,4 +45,5 @@
     <string name="markerupdatedfaillabel">Falha na Atualização do Marcador</string>
     <string name="markerdeletedlabel">Marcador Apagado</string>
     <string name="markerdeletedfailedlabel">Falha ao Apagar Marcador</string>
+    <string name="returnmaplabel">Voltar ao Mapa</string>
 </resources>

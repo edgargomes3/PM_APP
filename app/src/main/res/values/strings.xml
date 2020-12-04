@@ -52,4 +52,5 @@
     <string name="markerupdatedfaillabel">Failed to Update Marker</string>
     <string name="markerdeletedlabel">Marker Deleted</string>
     <string name="markerdeletedfailedlabel">Marker Failed to Delete</string>
+    <string name="returnmaplabel">Return to Map</string>
 </resources>
