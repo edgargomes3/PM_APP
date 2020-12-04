@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -210,6 +211,12 @@ class MapMarkerDetails : AppCompatActivity() {
                 Toast.makeText(this@MapMarkerDetails, "${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    fun map( view: View) {
+        val intent = Intent( this@MapMarkerDetails, MapActivity::class.java )
+        startActivity( intent )
+        finish()
     }
 
     companion object {
