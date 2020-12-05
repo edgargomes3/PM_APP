@@ -11,6 +11,24 @@
         />
 
     <item
+        android:id="@+id/filter_type"
+        android:title="@string/filtertypelabel"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/filter_distance"
+        android:title="@string/filterdistancelabel"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/show_markers"
+        android:title="@string/showmarkerlabel"
+        app:showAsAction="never"
+        />
+
+    <item
         android:id="@+id/logout_btn"
         android:title="@string/logoutlabel"
         app:showAsAction="never"

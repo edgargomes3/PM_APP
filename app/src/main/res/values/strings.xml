@@ -53,4 +53,7 @@
     <string name="markerdeletedlabel">Marker Deleted</string>
     <string name="markerdeletedfailedlabel">Marker Failed to Delete</string>
     <string name="returnmaplabel">Return to Map</string>
+    <string name="filtertypelabel">Filter Type: Accident</string>
+    <string name="filterdistancelabel">Filter Distance: 5km</string>
+    <string name="showmarkerlabel">Show All Markers</string>
 </resources>

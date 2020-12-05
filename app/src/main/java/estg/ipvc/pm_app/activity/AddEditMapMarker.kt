@@ -24,8 +24,6 @@ import estg.ipvc.pm_app.API.ServiceBuilder
 import estg.ipvc.pm_app.R
 import estg.ipvc.pm_app.dataclasses.TipoProblema
 import kotlinx.android.synthetic.main.activity_add_map_marker.*
-import kotlinx.coroutines.internal.synchronized
-import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

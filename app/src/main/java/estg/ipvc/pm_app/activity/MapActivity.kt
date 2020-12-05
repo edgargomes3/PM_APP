@@ -56,41 +56,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         val sharedPref: SharedPreferences = getSharedPreferences(
-            getString(R.string.preference_file_key),
-            Context.MODE_PRIVATE
+                getString(R.string.preference_file_key),
+                Context.MODE_PRIVATE
         )
         user = sharedPref.getString(getString(R.string.automatic_login_username), null)!!
 
-        val request = ServiceBuilder.buildService(NotesMarkerEndPoints::class.java)
-        val call = request.getNotesMarker()
-        var position: LatLng
-
-        call.enqueue(object : Callback<List<MapMarker>> {
-            override fun onResponse(call: Call<List<MapMarker>>, response: Response<List<MapMarker>>) {
-                if (response.isSuccessful) {
-                    val c = response.body()
-
-                    if (c != null) {
-                        for (note in c) {
-                            position = LatLng(note.latitude.toDouble(), note.longitude.toDouble())
-
-                            if ( TextUtils.equals( note.user.username, user) ) {
-                                val marker = mMap.addMarker(MarkerOptions().position(position).title(note.problema).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
-                                marker.tag = "${note.id}-true"
-                            }
-                            else {
-                                val marker = mMap.addMarker(MarkerOptions().position(position).title(note.problema))
-                                marker.tag = "${note.id}"
-                            }
-                        }
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<List<MapMarker>>, t: Throwable) {
-                Toast.makeText(this@MapActivity, "${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+        load_marker(null, null)
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
@@ -100,8 +71,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
                     Log.d(
-                        "****LOCATION****",
-                        "new location received - " + loc.latitude + " -" + loc.longitude
+                            "****LOCATION****",
+                            "new location received - " + loc.latitude + " -" + loc.longitude
                     )
                 }
             }
@@ -121,34 +92,35 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             val latitude = data.getStringExtra(AddEditMapMarker.EXTRA_LATITUDE).toString()
             val longitude = data.getStringExtra(AddEditMapMarker.EXTRA_LONGITUDE).toString()
             val username = data.getStringExtra(AddEditMapMarker.EXTRA_USERNAME).toString()
+            val position = LatLng( latitude.toDouble(), longitude.toDouble() )
 
             val request = ServiceBuilder.buildService(NotesMarkerEndPoints::class.java)
             val call = request.postNotesMarker(
-                tipoproblema,
-                problema,
-                foto,
-                latitude,
-                longitude,
-                username
+                    tipoproblema,
+                    problema,
+                    foto,
+                    latitude,
+                    longitude,
+                    username
             )
 
             call.enqueue(object : Callback<NotesMarkerOutputPost> {
                 override fun onResponse(
-                    call: Call<NotesMarkerOutputPost>,
-                    response: Response<NotesMarkerOutputPost>
+                        call: Call<NotesMarkerOutputPost>,
+                        response: Response<NotesMarkerOutputPost>
                 ) {
                     if (response.isSuccessful) {
                         val c = response.body()!!
 
-                        if (c.success) Toast.makeText(
-                            this@MapActivity,
-                            R.string.markercreatedlabel,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if (c.success) {
+                            Toast.makeText(this@MapActivity, R.string.markercreatedlabel, Toast.LENGTH_SHORT).show()
+                            val marker = mMap.addMarker(MarkerOptions().position(position).title(problema).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+                            marker.tag = "${c.msg}-true"
+                        }
                         else Toast.makeText(
-                            this@MapActivity,
-                            R.string.markerinsertfaillabel,
-                            Toast.LENGTH_SHORT
+                                this@MapActivity,
+                                R.string.markerinsertfaillabel,
+                                Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
@@ -163,28 +135,28 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-            mMap.setOnInfoWindowClickListener( object: GoogleMap.OnInfoWindowClickListener {
-                override fun onInfoWindowClick(p0: Marker) {
-                    val intent = Intent(this@MapActivity, MapMarkerDetails::class.java)
+        mMap.setOnInfoWindowClickListener( object: GoogleMap.OnInfoWindowClickListener {
+            override fun onInfoWindowClick(p0: Marker) {
+                val intent = Intent(this@MapActivity, MapMarkerDetails::class.java)
 
-                    val split = TextUtils.split( "${p0.tag}", "-")
-                    var id: Int
-                    var editable: Boolean
+                val split = TextUtils.split( "${p0.tag}", "-")
+                var id: Int
+                var editable: Boolean
 
-                    id = split[0].toInt()
-                    intent.putExtra(MapMarkerDetails.EXTRA_ID, id)
+                id = split[0].toInt()
+                intent.putExtra(MapMarkerDetails.EXTRA_ID, id)
 
-                    if ( split.size > 1) {
-                        editable = split[1].toBoolean()
-                        intent.putExtra(MapMarkerDetails.EXTRA_EDITABLE, editable)
-                    }
-
-                    intent.putExtra(MapMarkerDetails.EXTRA_LATITUDE, lastLocation.latitude.toString())
-                    intent.putExtra(MapMarkerDetails.EXTRA_LONGITUDE, lastLocation.longitude.toString())
-
-                    startActivity(intent)
+                if ( split.size > 1) {
+                    editable = split[1].toBoolean()
+                    intent.putExtra(MapMarkerDetails.EXTRA_EDITABLE, editable)
                 }
-            })
+
+                intent.putExtra(MapMarkerDetails.EXTRA_LATITUDE, lastLocation.latitude.toString())
+                intent.putExtra(MapMarkerDetails.EXTRA_LONGITUDE, lastLocation.longitude.toString())
+
+                startActivity(intent)
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -198,9 +170,24 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 new_marker()
                 true
             }
+            R.id.filter_type -> {
+                mMap.clear()
+                load_marker("Acidente", null)
+                true
+            }
+            R.id.filter_distance -> {
+                mMap.clear()
+                load_marker(null, 5000)
+                true
+            }
+            R.id.show_markers -> {
+                mMap.clear()
+                load_marker(null, null)
+                true
+            }
             R.id.logout_btn -> {
                 val sharedPref: SharedPreferences = getSharedPreferences(
-                    getString(R.string.preference_file_key), Context.MODE_PRIVATE
+                        getString(R.string.preference_file_key), Context.MODE_PRIVATE
                 )
                 with(sharedPref.edit()) {
                     putBoolean(getString(R.string.automatic_login_check), false)
@@ -217,15 +204,68 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    fun load_marker( type: String?, distance: Int? ) {
+        val request = ServiceBuilder.buildService(NotesMarkerEndPoints::class.java)
+        var call: Call<List<MapMarker>>
+        if( type != null ) call = request.getNotesMarkerByType(type)
+        else call = request.getNotesMarker()
+
+        var position: LatLng
+
+        call.enqueue(object : Callback<List<MapMarker>> {
+            override fun onResponse(call: Call<List<MapMarker>>, response: Response<List<MapMarker>>) {
+                if (response.isSuccessful) {
+                    val c = response.body()
+
+                    if (c != null) {
+                        for (note in c) {
+                            position = LatLng(note.latitude.toDouble(), note.longitude.toDouble())
+                            val distanceOf = calculateDistance(lastLocation.latitude, lastLocation.longitude, position.latitude, position.longitude)
+
+                            if( distance != null ) {
+                                if (distanceOf < distance) {
+                                    if ( TextUtils.equals( note.user.username, user) ) {
+                                        val marker = mMap.addMarker(MarkerOptions().position(position).title(note.problema+" - "+ distanceOf).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+                                        marker.tag = "${note.id}-true"
+                                        note.tipo_problema.tipo
+                                    }
+                                    else {
+                                        val marker = mMap.addMarker(MarkerOptions().position(position).title(note.problema+" - "+ distanceOf))
+                                        marker.tag = "${note.id}"
+                                    }
+                                }
+                            }
+                            else {
+                                if ( TextUtils.equals( note.user.username, user) ) {
+                                    val marker = mMap.addMarker(MarkerOptions().position(position).title(note.problema+" - "+ distanceOf).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+                                    marker.tag = "${note.id}-true"
+                                    note.tipo_problema.tipo
+                                }
+                                else {
+                                    val marker = mMap.addMarker(MarkerOptions().position(position).title(note.problema+" - "+ distanceOf))
+                                    marker.tag = "${note.id}"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<List<MapMarker>>, t: Throwable) {
+                Toast.makeText(this@MapActivity, "${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     fun new_marker() {
         if ( ActivityCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED ) {
+                        this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
+                    this,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    LOCATION_PERMISSION_REQUEST_CODE
             )
             return
         }
@@ -239,6 +279,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             startActivityForResult(intent, ADD_MAP_MARKER_REQUEST_CODE)
         }
     }
+
+    // TEST
 
     private fun getLocationUpdates()
     {
@@ -258,27 +300,33 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     var loc = LatLng(lastLocation.latitude, lastLocation.longitude)
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15.0f))
                     Log.d(
-                        "****LOCATION****",
-                        "New Location Received - " + loc.latitude + " -" + loc.longitude
+                            "****LOCATION****",
+                            "New Location Received - " + loc.latitude + " -" + loc.longitude
                     )
                 }
             }
         }
     }
 
+    fun calculateDistance(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Float {
+        val results = FloatArray(1)
+        Location.distanceBetween(lat1, lng1, lat2, lng2, results)
+        return results[0]
+    }
+
     private fun startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
+                    this,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    LOCATION_PERMISSION_REQUEST_CODE
             )
             return
         }
         fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            null /* Looper */
+                locationRequest,
+                locationCallback,
+                null /* Looper */
         )
     }
 

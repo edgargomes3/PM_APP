@@ -3,7 +3,6 @@ package estg.ipvc.pm_app.API
 import estg.ipvc.pm_app.dataclasses.MapMarker
 import estg.ipvc.pm_app.dataclasses.TipoProblema
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -17,6 +16,9 @@ interface NotesMarkerEndPoints {
 
     @GET("/api/marker/{id}")
     fun getNotesMarkerById(@Path("id") id: Int): Call<List<MapMarker>>
+
+    @GET("/api/marker/tipo/{tipo_problema}")
+    fun getNotesMarkerByType(@Path("tipo_problema") tipo_problema: String): Call<List<MapMarker>>
 
     @FormUrlEncoded
     @POST("/api/marker/update")

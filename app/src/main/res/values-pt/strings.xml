@@ -46,4 +46,7 @@
     <string name="markerdeletedlabel">Marcador Apagado</string>
     <string name="markerdeletedfailedlabel">Falha ao Apagar Marcador</string>
     <string name="returnmaplabel">Voltar ao Mapa</string>
+    <string name="filtertypelabel">Filtrar Tipo: Acidente</string>
+    <string name="filterdistancelabel">Filtrar Distancia: 5km</string>
+    <string name="showmarkerlabel">Mostrar Todos Marcadores</string>
 </resources>
