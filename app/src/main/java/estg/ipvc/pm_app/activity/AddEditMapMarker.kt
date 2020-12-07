@@ -1,21 +1,29 @@
 package estg.ipvc.pm_app.activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Location
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.TextUtils
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import estg.ipvc.pm_app.API.NotesMarkerEndPoints
@@ -34,7 +42,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 
-class AddEditMapMarker : AppCompatActivity() {
+class AddEditMapMarker : AppCompatActivity(), SensorEventListener {
+    private lateinit var sensorManager: SensorManager
+
     private lateinit var coordenadas: TextView
     private lateinit var problema: EditText
     private lateinit var tipoproblema: Spinner
@@ -46,6 +56,8 @@ class AddEditMapMarker : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_map_marker)
+
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
         coordenadas = findViewById<TextView>(R.id.new_marker_coord)
         tipoproblema = findViewById<Spinner>(R.id.new_marker_tipo_problema)
@@ -253,6 +265,52 @@ class AddEditMapMarker : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    @SuppressLint("NewApi")
+    override fun onResume() {
+        super.onResume()
+
+        sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)?.also { light ->
+            sensorManager.registerListener(
+                    this,
+                    light,
+                    SensorManager.SENSOR_DELAY_NORMAL,
+                    SensorManager.SENSOR_DELAY_UI
+            )
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        sensorManager.unregisterListener(this)
+    }
+
+    override fun onSensorChanged(event: SensorEvent) {
+
+        if (event.sensor.type == Sensor.TYPE_LIGHT) {
+            val layout = findViewById<ConstraintLayout>(R.id.add_edit_marker_layout)
+            val marker_coord = findViewById<TextView>(R.id.new_marker_coord)
+            val marker_problema = findViewById<EditText>(R.id.new_marker_problema)
+
+            Log.d("SENSORS", "onSensorChanged: TYPE_LIGHT: ${event.values[0]}")
+            if (event.values[0] > 5000) {
+                layout.setBackgroundColor(Color.parseColor("#000000"))
+                marker_coord.setTextColor(Color.parseColor("#FFFFFF"))
+                marker_problema.setTextColor(Color.parseColor("#FFFFFF"))
+                marker_problema.setHintTextColor(Color.parseColor("#FFFFFF"))
+            }
+            else {
+                layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                marker_coord.setTextColor(Color.parseColor("#000000"))
+                marker_problema.setTextColor(Color.parseColor("#000000"))
+                marker_problema.setHintTextColor(Color.parseColor("#000000"))
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
     }
 
     companion object {

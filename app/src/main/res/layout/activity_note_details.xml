@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MapMarkerDetails">
+    tools:context=".activity.MapMarkerDetails"
+    android:id="@+id/note_details_layout">
 
     <TextView
         android:id="@+id/marker_coord"

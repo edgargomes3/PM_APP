@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.hardware.Sensor
 import android.location.Location
 import android.os.Bundle
 import android.text.TextUtils
@@ -33,6 +34,10 @@ import estg.ipvc.pm_app.dataclasses.MapMarker
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 

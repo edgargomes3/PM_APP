@@ -1,11 +1,18 @@
 package estg.ipvc.pm_app.activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -13,6 +20,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import estg.ipvc.pm_app.API.NotesMarkerEndPoints
 import estg.ipvc.pm_app.API.NotesMarkerOutputPost
 import estg.ipvc.pm_app.API.ServiceBuilder
@@ -23,7 +31,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.net.URL
 
-class MapMarkerDetails : AppCompatActivity() {
+class MapMarkerDetails : AppCompatActivity(), SensorEventListener {
+    private lateinit var sensorManager: SensorManager
 
     private lateinit var tipo_problema: TextView
     private lateinit var problema: TextView
@@ -37,6 +46,8 @@ class MapMarkerDetails : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_note_details)
+
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
         tipo_problema = findViewById<TextView>(R.id.marker_tipo_problema)
         problema = findViewById<TextView>(R.id.marker_problema)
@@ -217,6 +228,89 @@ class MapMarkerDetails : AppCompatActivity() {
         val intent = Intent( this@MapMarkerDetails, MapActivity::class.java )
         startActivity( intent )
         finish()
+    }
+
+    @SuppressLint("NewApi")
+    override fun onResume() {
+        super.onResume()
+
+        sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)?.also { light ->
+            sensorManager.registerListener(
+                    this,
+                    light,
+                    SensorManager.SENSOR_DELAY_NORMAL,
+                    SensorManager.SENSOR_DELAY_UI
+            )
+        }
+        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
+            sensorManager.registerListener(
+                    this,
+                    accelerometer,
+                    SensorManager.SENSOR_DELAY_NORMAL,
+                    SensorManager.SENSOR_DELAY_UI
+            )
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        sensorManager.unregisterListener(this)
+    }
+
+    override fun onSensorChanged(event: SensorEvent) {
+
+        if (event.sensor.type == Sensor.TYPE_LIGHT) {
+            val layout = findViewById<ConstraintLayout>(R.id.note_details_layout)
+            val marker_coord = findViewById<TextView>(R.id.marker_coord)
+            val marker_tipo_problema = findViewById<TextView>(R.id.marker_tipo_problema)
+            val marker_problema = findViewById<TextView>(R.id.marker_problema)
+
+            Log.d("SENSORS", "onSensorChanged: TYPE_LIGHT: ${event.values[0]}")
+            if (event.values[0] > 5000) {
+                layout.setBackgroundColor(Color.parseColor("#000000"))
+                marker_coord.setTextColor(Color.parseColor("#FFFFFF"))
+                marker_tipo_problema.setTextColor(Color.parseColor("#FFFFFF"))
+                marker_problema.setTextColor(Color.parseColor("#FFFFFF"))
+            }
+            else {
+                layout.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                marker_coord.setTextColor(Color.parseColor("#000000"))
+                marker_tipo_problema.setTextColor(Color.parseColor("#000000"))
+                marker_problema.setTextColor(Color.parseColor("#000000"))
+            }
+        }
+        /*else if( event.sensor.type == Sensor.TYPE_ACCELEROMETER ) {
+            val xChange: Float = history.get(0) - event.values[0]
+            val yChange: Float = history.get(1) - event.values[1]
+
+            history[0] = event.values[0]
+            history[1] = event.values[1]
+
+            if (xChange > 0) {
+                direction[0] = "LEFT"
+            } else if (xChange < 0) {
+                direction[0] = "RIGHT"
+            }
+
+            if (yChange > 1) {
+                direction[1] = "DOWN"
+            } else if (yChange < -1) {
+                direction[1] = "UP"
+            }
+
+            builder.setLength(0)
+            builder.append("x: ")
+            builder.append(direction.get(0))
+            builder.append(" y: ")
+            builder.append(direction.get(1))
+
+            findViewById<TextView>(R.id.text).setText(builder.toString())
+            Log.d("SENSORS", "onSensorChanged: TYPE_ACCELEROMETER: ${event.values}")
+        }*/
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
     }
 
     companion object {

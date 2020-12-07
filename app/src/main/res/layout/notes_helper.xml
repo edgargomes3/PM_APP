@@ -3,7 +3,8 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:background="@color/white"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:id="@+id/recycler_view_note_layout">
 
     <TextView
         android:id="@+id/notes_recycle_title"
@@ -12,7 +13,8 @@
         android:layout_margin="5dp"
         android:text="@string/titlelabel"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        />
 
     <TextView
         android:id="@+id/notes_recycle_text"
@@ -23,6 +25,7 @@
         android:layout_alignLeft="@id/notes_recycle_title"
         android:layout_marginBottom="5dp"
         android:text="@string/textlabel"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        />
 
 </RelativeLayout>

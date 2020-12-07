@@ -1,13 +1,23 @@
 package estg.ipvc.pm_app.activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,13 +31,17 @@ import kotlinx.android.synthetic.main.activity_notes.*
 
 private lateinit var noteViewModel: NoteViewModel
 
-class NoteActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener {
+class NoteActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener, SensorEventListener {
+    private lateinit var sensorManager: SensorManager
+
     private val AddNoteRequestCode = 1
     private val EditNoteRequestCode = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
+
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
         val recyclerView = findViewById<RecyclerView>(R.id.notes_recycler_view)
         val adapter = NoteAdapter(this, this)
@@ -113,4 +127,41 @@ class NoteActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener {
         startActivityForResult(intent, EditNoteRequestCode)
     }
 
+    @SuppressLint("NewApi")
+    override fun onResume() {
+        super.onResume()
+
+        sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)?.also { light ->
+            sensorManager.registerListener(
+                    this,
+                    light,
+                    SensorManager.SENSOR_DELAY_NORMAL,
+                    SensorManager.SENSOR_DELAY_UI
+            )
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        sensorManager.unregisterListener(this)
+    }
+
+    override fun onSensorChanged(event: SensorEvent) {
+
+        if (event.sensor.type == Sensor.TYPE_LIGHT) {
+            val layout1 = findViewById<RelativeLayout>(R.id.notes_layout)
+
+            Log.d("SENSORS", "onSensorChanged: TYPE_LIGHT: ${event.values[0]}")
+            if (event.values[0] > 5000) {
+                layout1.setBackgroundColor(Color.parseColor("#000000"))
+            }
+            else {
+                layout1.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+    }
 }
