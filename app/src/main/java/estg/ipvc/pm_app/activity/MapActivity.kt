@@ -1,11 +1,13 @@
 package estg.ipvc.pm_app.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.hardware.Sensor
 import android.location.Location
 import android.os.Bundle
@@ -37,9 +39,14 @@ import retrofit2.Response
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapActivity : AppCompatActivity(), OnMapReadyCallback, SensorEventListener {
+    private lateinit var sensorManager: SensorManager
+    private lateinit var history: FloatArray
+    private lateinit var direction: String
 
     private lateinit var mMap: GoogleMap
     private lateinit var lastLocation: Location
@@ -59,6 +66,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        history = FloatArray(2)
+        direction = ""
 
         val sharedPref: SharedPreferences = getSharedPreferences(
                 getString(R.string.preference_file_key),
@@ -339,15 +350,61 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
+    @SuppressLint("NewApi")
+    override fun onResume() {
+        super.onResume()
+
+        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
+            sensorManager.registerListener(
+                    this,
+                    accelerometer,
+                    SensorManager.SENSOR_DELAY_NORMAL,
+                    SensorManager.SENSOR_DELAY_UI
+            )
+        }
+
+        startLocationUpdates()
+        Log.d("****LOCATION****", "onResume - startLocationUpdates")
+    }
+
     override fun onPause() {
         super.onPause()
+        sensorManager.unregisterListener(this)
         stopLocationUpdates()
         Log.d("****LOCATION****", "onPause - removeLocationUpdates")
     }
 
-    override fun onResume() {
-        super.onResume()
-        startLocationUpdates()
-        Log.d("****LOCATION****", "onResume - startLocationUpdates")
+    override fun onSensorChanged(event: SensorEvent) {
+        if( event.sensor.type == Sensor.TYPE_ACCELEROMETER ) {
+            val xChange: Float = history[0] - event.values[0]
+            val yChange: Float = history[1] - event.values[1]
+
+            history[0] = event.values[0]
+            history[1] = event.values[1]
+
+            if (xChange > 9) {
+                direction = "E"
+                Toast.makeText(this@MapActivity, "$direction", Toast.LENGTH_SHORT).show()
+                Log.d("SENSORS", "onSensorChanged: TYPE_ACCELEROMETER: $direction | $xChange | $yChange")
+            }
+            else if (xChange < -9) {
+                direction = "O"
+                Toast.makeText(this@MapActivity, "$direction", Toast.LENGTH_SHORT).show()
+                Log.d("SENSORS", "onSensorChanged: TYPE_ACCELEROMETER: $direction | $xChange | $yChange")
+            }
+            else if (yChange > 5) {
+                direction = "N"
+                Toast.makeText(this@MapActivity, "$direction", Toast.LENGTH_SHORT).show()
+                Log.d("SENSORS", "onSensorChanged: TYPE_ACCELEROMETER: $direction | $xChange | $yChange")
+            }
+            else if (yChange < -5) {
+                direction = "S"
+                Toast.makeText(this@MapActivity, "$direction", Toast.LENGTH_SHORT).show()
+                Log.d("SENSORS", "onSensorChanged: TYPE_ACCELEROMETER: $direction | $xChange | $yChange")
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
     }
 }
